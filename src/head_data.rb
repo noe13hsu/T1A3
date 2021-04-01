@@ -1,7 +1,8 @@
 $head_data = [
     {
      name: , 
-     type: , 
+     type: ,
+     is_altered: ,
      armor: ,
      melee_atk: , 
      shot_atk: , 
@@ -11,7 +12,7 @@ $head_data = [
      beam_res: , 
      word_tag: [], 
      ex_skill: {name: , type: , pierce: , power: , cooldown: }, 
-     trait: {type: , description: },
+     trait: [{type: , description: }, {type: , description: }],
      source: 
     },
     {
