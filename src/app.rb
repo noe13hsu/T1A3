@@ -88,7 +88,7 @@ when "Sign up"
     is_username_found = username_registered?(username)
     while is_username_found
         print "#{username} is already taken \nPlease enter a different username: "
-        username = request_username
+        username = gets.chomp.downcase
         # puts username
         is_username_found = username_registered?(username)
     end
