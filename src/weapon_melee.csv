@@ -1,0 +1,4 @@
+name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,ex_skill_name,ex_skill_type,ex_skill_pierce,ex_skill_power,ex_skill_cooldown,ex_skill_initial_cooldown,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source,category
+Strike Freedom Gundam,S,Yes,3651,10113,1136,0,0,746,3034,Ace Excl.,Gundam Type,nil,nil,nil,nil,nil,nil,Enemy Melee Power Reduction,While "Ace Excl." Enemy Melee power reduced 30%,EX Skill Power,Shot DMG raised 10% EX Skill power boosted 35%,Limited,Dual Sabers
+Infinity Justice Gundam,T,Yes,1527,11428,0,0,0,1005,2829,Close Combat,High Mobility,nil,nil,nil,nil,nil,nil,Initial EX Skill Charge,Out-Fighter Job initial EX Skill charge boosted 20%,Enemy Melee Power Reduction,While "High Mobility" Enemy Melee power reduced 30%,Limited,Twin Blade
+

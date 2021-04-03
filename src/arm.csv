@@ -1,0 +1,4 @@
+name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,ex_skill_name,ex_skill_type,ex_skill_pierce,ex_skill_power,ex_skill_cooldown,ex_skill_initial_cooldown,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source,with_shield
+Strike Freedom Gundam,S,Yes,1911,10451,7185,6110,8580,1850,3724,Ace Excl.,Mid-Range,Beam Sword[METEOR],Beam Melee,D,A,21s,6s,nil,nil,nil,nil,Limited,Yes
+Infinity Justice Gundam,T,Yes,2825,9587,3456,1527,0,0,1852,Close Combat,Gundam Type,nil,nil,nil,nil,nil,nil,Melee Power,Out-Fighter Job Melee power boosted 30%,Melee Power,Shot Attack down 10% Melee power boosted 35%,Limited,No
+Delta Plus,P,Yes,1919,6601,0,2824,2824,0,0,Transformer,Federation,nil,nil,nil,nil,nil,nil,Damage Reduction,With Rifle category equipped Sp. Shot DMG taken reduced by 20,Shooting Power,Middle-Shooter Job Shooting power boosted 30%,Event,No

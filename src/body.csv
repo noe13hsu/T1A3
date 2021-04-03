@@ -1,0 +1,4 @@
+name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,ex_skill_name,ex_skill_type,ex_skill_pierce,ex_skill_power,ex_skill_cooldown,ex_skill_initial_cooldown,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source
+Strike Freedom Gundam,S,Yes,5171,2665,4180,0,3290,0,3549,Ace Excl.,Gundam Type,Callidus Multi-Phase Beam Cannon,Beam Shot,A+,B+,60s,15s,nil,nil,nil,nil,Limited
+Infinity Justice Gundam,T,Yes,4571,2819,3456,1531,4189,0,3250,Close Combat,Gundam Type,CIWS,Phys Shot,B+,C,60s,0s,nil,nil,nil,nil,Limited
+Delta Plus,P,Yes,4789,1919,944,1919,1919,634,634,Transformer,Federation,nil,nil,nil,nil,nil,nil,EX Skill DMG,With Power attribute(self) EX Skill DMG output boosted by 20,Chance to Survive,With Power attribute(self) 14% chance to survive aa fatal blow,Event

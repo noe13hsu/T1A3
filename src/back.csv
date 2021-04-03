@@ -1,0 +1,4 @@
+name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,ex_skill_name,ex_skill_type,ex_skill_pierce,ex_skill_power,ex_skill_cooldown,ex_skill_initial_cooldown,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source
+Strike Freedom Gundam,S,Yes,2445,1717,3290,2654,3961,988,3155,Ace Excl.,High Mobility,HiMAT Mode,Beam Shot,A-,A,79s,8s,nil,nil,nil,nil,Limited
+Infinity Justice Gundam,T,Yes,2831,3306,2673,3290,2462,1417,2977,Close Combat,High Mobility,Fatum-01,Beam Melee,D,S,79s,20s,nil,nil,nil,nil,Limited
+Delta Plus,P,Yes,2824,944,944,2824,1919,1170,1170,Transformer,Mid-Range,nil,nil,nil,nil,nil,nil,EX Skill Effect,With Power attribute(self) Buff EX Skill effect up 15%,Vernier Consumption Reduction,When Armor is 60% or more Vernier consumption reduced 20%,Event

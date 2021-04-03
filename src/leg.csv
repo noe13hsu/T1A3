@@ -1,0 +1,4 @@
+name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,ex_skill_name,ex_skill_type,ex_skill_pierce,ex_skill_power,ex_skill_cooldown,ex_skill_initial_cooldown,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source
+Strike Freedom Gundam,S,Yes,2813,1725,3290,3290,3832,988,3155,Ace Excl.,High Mobility,Xiphias 3 Rail Cannon,Phys Shot,D,S,73s,19s,nil,nil,nil,nil,Limited
+Infinity Justice Gundam,T,Yes,2829,3290,2452,3285,2462,1421,2984,Close Combat,High Mobility,Infinite Drive,Beam Melee,D,S,79s,20s,nil,nil,nil,nil,Limited
+Delta Plus,P,Yes,2824,944,944,2824,1919,1170,1170,nil,nil,nil,nil,nil,nil,Sp. Shot Power,When Armor is 60% or more Sp. Shot power boosted 25%,Projectile Speed,While "Transformer" Projectile speed boosted 15%,Event
