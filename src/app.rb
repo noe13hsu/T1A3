@@ -1,7 +1,7 @@
 require "csv"
 require "tty-prompt"
 require "tty-table"
-prompt = TTY::Prompt.new
+# prompt = TTY::Prompt.new
 
 def append_to_user_csv(username, password, head=nil, body=nil, arm=nil, leg=nil, back=nil, weapon_melee=nil, weapon_ranged=nil, shield=nil, pilot=nil)
     CSV.open("user.csv", "a") do |row|
@@ -38,12 +38,47 @@ def request_password
     return gets.chomp.downcase
 end
 
+def feature_menu
+    prompt = TTY::Prompt.new
+    prompt.select("What would you like to do?") do |menu|
+        menu.choice "Review my current build"
+        menu.choice "Start a new build"
+        menu.choice "Search for parts by name"
+        menu.choice "Filter and sort parts"
+        menu.choice "Get a build recommendation"
+        menu.choice "Log out"
+    end
+end
+
+def title_menu
+    prompt = TTY::Prompt.new
+    prompt.select("What would you like to do?") do |menu|
+        menu.choice "Sign up"
+        menu.choice "Log in"
+    end
+end
+
+def create_table(username)
+    user_details = load_user_details(username)
+    TTY::Table.new(
+        [   "Part",             "Name",                         "  ",   "Type",       "S"],
+        [
+            ["Head",            user_details[:head],            "  ",   "Armor",      user_details[:head]], 
+            ["Body",            user_details[:body],            "  ",   "Melee ATK",  user_details[:body]], 
+            ["Arm",             user_details[:arm],             "  ",   "Shot ATK",   user_details[:arm]], 
+            ["Leg",             user_details[:leg],             "  ",   "Melee DEF",  user_details[:leg]], 
+            ["Back",            user_details[:back],            "  ",   "Shot DEF",   user_details[:back]], 
+            ["Melee Weapon",    user_details[:weapon_melee],    "  ",   "Beam RES",   user_details[:weapon_melee]], 
+            ["Ranged Weapon",   user_details[:weapon_ranged],   "  ",   "Phys RES",   user_details[:weapon_ranged]], 
+            ["Shield",          user_details[:shield],          "  ",   nil,          nil], 
+            ["Pilot",           user_details[:pilot],           "  ",   nil,          nil]
+        ]
+    )  
+end
+
 puts "Welcome to GBM Helper"
 
-user_choice = prompt.select("What would you like to do?") do |menu|
-    menu.choice "Sign up"
-    menu.choice "Log in"
-end
+user_choice = title_menu
 
 is_signed_in = false
 case user_choice
@@ -63,31 +98,12 @@ when "Sign up"
     is_signed_in = true
     while is_signed_in
         # puts username
-        user_choice = prompt.select("What would you like to do?") do |menu|
-            menu.choice "Review my current build"
-            menu.choice "Start a new build"
-            menu.choice "Search for parts by name"
-            menu.choice "Filter and sort parts"
-            menu.choice "Get a build recommendation"
-            menu.choice "Log out"
-        end
+        user_choice = feature_menu
         case user_choice
         when "Review my current build"
-            user_details = load_user_details(username)
-            build_table = TTY::Table.new(
-                ["Category","Name"], 
-                [
-                    ["Head", user_details[:head]], 
-                    ["Body", user_details[:body]], 
-                    ["Arm", user_details[:arm]], 
-                    ["Leg", user_details[:leg]], 
-                    ["Back", user_details[:back]], 
-                    ["Melee Weapon", user_details[:weapon_melee]], 
-                    ["Ranged Weapon", user_details[:weapon_ranged]], 
-                    ["Shield", user_details[:shield]], 
-                    ["Pilot", user_details[:pilot]]
-                ])
-            puts build_table.render(:unicode, alignments: [:left, :center])
+            # user_details = load_user_details(username)
+            current_build = create_table(username)
+            puts current_build.render(:unicode, alignments: [:left, :center])
         when "Start a new build"
             puts "a"
         when "Search for parts by name"
@@ -112,16 +128,14 @@ when "Log in"
             puts "Successful login"
             is_signed_in = true
             while is_signed_in
-                user_choice = prompt.select("What would you like to do?") do |menu|
-                    menu.choice "Review my current build"
-                    menu.choice "Search for parts by name"
-                    menu.choice "Filter and sort parts"
-                    menu.choice "Get a build recommendation"
-                    menu.choice "Log out"
-                end
+                user_choice = feature_menu
                 case user_choice
                 when "Review my current build"
-                    puts build_table.render(:unicode, alignments: [:left, :center])
+                    # user_details = load_user_details(username)
+                    current_build = create_table(username)
+                    puts current_build.render(:unicode, alignments: [:left, :center])
+                when "Start a new build"
+                    puts "a"
                 when "Search for parts by name"
                     puts "b"
                 when "Filter and sort parts"
