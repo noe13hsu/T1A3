@@ -4,7 +4,7 @@
 Gundam Breaker Mobile (GBM) is a Japanese mobile game. Since its release in July 2019, more than 250 mobile suits have been introduced to the game, each with collectable parts such as head, body, arm, leg, backpack, weapon, and shield to allow players to build their customised mobile suits to clear missions.
 
 ## Purpose of GBM Helper
-Gundam Breaker Mobile provides a large number of collectible parts with different stats, active skills, and passive skills which makes building a good mobile suit a challenging and time-consuming task for its players. The Dengeki Wiki Japan even though has details of all the parts, only offers a sort feature, players will need to go back and forth to view the stats and skills that each part provides. GBM Helper aims to provide assistance to the players of Gundam Breaker Mobile by including:
+Gundam Breaker Mobile provides a large number of collectible parts with different stats, active skills, and passive skills which makes building a good mobile suit a challenging and time-consuming task for its players. The [Dengeki Wiki Japan](https://wiki.dengekionline.com/gbm/) even though has details of all the parts, only offers a sort feature, players will need to go back and forth to view the stats and skills that each part provides. GBM Helper aims to provide assistance to the players of Gundam Breaker Mobile by including:
 * a login feature to allow users to retrieve their current build and access other features upon successful login
 * a search feature to allow users to search for a certain part by its name, users then can view the stats and skills of the part
 * a filter feature to allow users to focus on a certain category (e.g. arm)
