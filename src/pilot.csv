@@ -1,3 +1,3 @@
-name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source
-Kira Yamato[Destiny],S,No,195,413,2337,1035,1607,0,1542,Ace Excl.,Gundam Type,Initial EX Skill Charge,With Twin Rifle category equipped Initial EX Skill charge boosted 20%,nil,nil,Standard
-Athrun Zala[Destiny],T,No,497,1986,1511,1032,1032,1015,0,Gundam Type,High Mobility,Initial EX Skill Charge,With "High Mobility" Initial EX Skill charge boosted 20%,Standard
+name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source,job
+Kira Yamato[Destiny],S,No,195,413,2337,1035,1607,0,1542,Ace Excl.,Gundam Type,Initial EX Skill Charge,With Twin Rifle category equipped Initial EX Skill charge boosted 20%,nil,nil,Standard,Long-Shooter
+Athrun Zala[Destiny],T,No,497,1986,1511,1032,1032,1015,0,Gundam Type,High Mobility,Initial EX Skill Charge,With "High Mobility" Initial EX Skill charge boosted 20%,Standard,Out-Fighter

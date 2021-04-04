@@ -9,18 +9,27 @@ def append_to_user_csv(username, password, head=nil, body=nil, arm=nil, leg=nil,
     end
 end
 
-def load_user_details(username)
-    CSV.foreach("user.csv", "a+", headers: true, header_converters: :symbol) do |row|
-        headers ||= row.headers
-        if row[0] == username
-            return row
+def write_to_csv(users)
+    headers = users.first.headers || ["username", "password", "build"]
+    CSV.open("user.csv", "w") do |csv|
+        csv << headers
+        users.each do |user|
+            csv << user
+        end
+    end
+end
+
+def load_user_details(all_users, username)
+    all_users.each do |user|
+        if user[:username] == username
+            return user
         end
     end
 end
 
 def username_registered?(username)
-    CSV.foreach("user.csv", "a+") do |row|
-        if row[0] == username
+    CSV.foreach("user.csv", "a+", headers: true, header_converters: :symbol) do |row|
+        if row[:username] == username
             # puts row[0]
             return true
         end
@@ -28,13 +37,13 @@ def username_registered?(username)
     return false
 end
 
-def request_username
-    print "Please enter your username: "
+def request_username(message)
+    print message
     return gets.chomp.downcase
 end
 
-def request_password
-    print "Please enter your password: "
+def request_password(message)
+    print message
     return gets.chomp.downcase
 end
 
@@ -58,51 +67,60 @@ def title_menu
     end
 end
 
-def create_table(username)
-    user_details = load_user_details(username)
+def create_table(this_user)
     TTY::Table.new(
         [   "Part",             "Name",                         "  ",   "Type",       "S"],
         [
-            ["Head",            user_details[:head],            "  ",   "Armor",      user_details[:head]], 
-            ["Body",            user_details[:body],            "  ",   "Melee ATK",  user_details[:body]], 
-            ["Arm",             user_details[:arm],             "  ",   "Shot ATK",   user_details[:arm]], 
-            ["Leg",             user_details[:leg],             "  ",   "Melee DEF",  user_details[:leg]], 
-            ["Back",            user_details[:back],            "  ",   "Shot DEF",   user_details[:back]], 
-            ["Melee Weapon",    user_details[:weapon_melee],    "  ",   "Beam RES",   user_details[:weapon_melee]], 
-            ["Ranged Weapon",   user_details[:weapon_ranged],   "  ",   "Phys RES",   user_details[:weapon_ranged]], 
-            ["Shield",          user_details[:shield],          "  ",   nil,          nil], 
-            ["Pilot",           user_details[:pilot],           "  ",   nil,          nil]
+            ["Head",            this_user[:head],            "  ",   "Armor",      this_user[:head]], 
+            ["Body",            this_user[:body],            "  ",   "Melee ATK",  this_user[:body]], 
+            ["Arm",             this_user[:arm],             "  ",   "Shot ATK",   this_user[:arm]], 
+            ["Leg",             this_user[:leg],             "  ",   "Melee DEF",  this_user[:leg]], 
+            ["Back",            this_user[:back],            "  ",   "Shot DEF",   this_user[:back]], 
+            ["Melee Weapon",    this_user[:weapon_melee],    "  ",   "Beam RES",   this_user[:weapon_melee]], 
+            ["Ranged Weapon",   this_user[:weapon_ranged],   "  ",   "Phys RES",   this_user[:weapon_ranged]], 
+            ["Shield",          this_user[:shield],          "  ",   nil,          nil], 
+            ["Pilot",           this_user[:pilot],           "  ",   nil,          nil]
         ]
     )  
 end
+
+def load_all_users
+    all_users = []
+    CSV.foreach("user.csv", headers: true, header_converters: :symbol) do |row|
+        headers ||= row.headers
+        all_users << row
+    end
+    return all_users
+end
+
+users = load_all_users
+is_signed_in = false
+# p all_users
 
 puts "Welcome to GBM Helper"
 
 user_choice = title_menu
 
-is_signed_in = false
 case user_choice
 when "Sign up"
-    username = request_username
-    # puts username
+    username = request_username("Please enter a username: ")
     is_username_found = username_registered?(username)
     while is_username_found
-        print "#{username} is already taken \nPlease enter a different username: "
-        username = gets.chomp.downcase
-        # puts username
+        username = request_username("Username is already taken\nPlease enter a different username: ")
         is_username_found = username_registered?(username)
     end
-    password = request_password
+    password = request_password("Please enter a password: ")
+    puts "Successful sign-up"
     append_to_user_csv(username, password)
-    puts "Successful sign-up "
+    users = load_all_users
+    this_user = load_user_details(users, username)
+    # p this_user
     is_signed_in = true
     while is_signed_in
-        # puts username
         user_choice = feature_menu
         case user_choice
         when "Review my current build"
-            # user_details = load_user_details(username)
-            current_build = create_table(username)
+            current_build = create_table(this_user)
             puts current_build.render(:unicode, alignments: [:left, :center])
         when "Start a new build"
             puts "a"
@@ -118,24 +136,36 @@ when "Sign up"
         end
     end
 when "Log in"
-    print "Please enter your username: "
-    username = request_username
+    username = request_username("Please enter your username: ")
     is_username_found = username_registered?(username)
     if is_username_found == true
-        user_details = load_user_details(username)
-        password = request_password
-        if password == user_details[1]
+        users = load_all_users
+        this_user = load_user_details(users, username)
+        password = request_password("Please enter your password: ")
+        if password == this_user[:password]
             puts "Successful login"
             is_signed_in = true
             while is_signed_in
                 user_choice = feature_menu
                 case user_choice
                 when "Review my current build"
-                    # user_details = load_user_details(username)
-                    current_build = create_table(username)
+                    current_build = create_table(this_user)
                     puts current_build.render(:unicode, alignments: [:left, :center])
                 when "Start a new build"
-                    puts "a"
+                    users.each do |user|
+                        if user[:username] == this_user[:username]
+                            user[:head] = nil
+                            user[:body] = nil
+                            user[:arm] = nil
+                            user[:leg] = nil
+                            user[:back] = nil
+                            user[:weapon_melee] = nil
+                            user[:weapon_ranged] = nil
+                            user[:shield] = nil
+                            user[:pilot] = nil
+                        end
+                    end
+                    write_to_csv(users)
                 when "Search for parts by name"
                     puts "b"
                 when "Filter and sort parts"
