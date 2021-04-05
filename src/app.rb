@@ -1,6 +1,7 @@
 require "csv"
 require "tty-prompt"
 require "tty-table"
+require "colorize"
 # prompt = TTY::Prompt.new
 
 def append_to_user_csv(username, password, head=nil, body=nil, arm=nil, leg=nil, back=nil, weapon_melee=nil, weapon_ranged=nil, shield=nil, pilot=nil)
@@ -37,6 +38,11 @@ def username_registered?(username)
     return false
 end
 
+def request_part_name(message)
+    print message
+    return gets.chomp.downcase.split(/\s+/).each{ |word| word.capitalize! }.join(' ')
+end
+
 def request_username(message)
     print message
     return gets.chomp.downcase
@@ -45,6 +51,21 @@ end
 def request_password(message)
     print message
     return gets.chomp.downcase
+end
+
+def category_menu
+    prompt = TTY::Prompt.new
+    prompt.select("Please select a category") do |menu|
+        menu.choice "Head"
+        menu.choice "Body"
+        menu.choice "Arm"
+        menu.choice "Leg"
+        menu.choice "Back"
+        menu.choice "Weapon_Melee"
+        menu.choice "Weapon_Ranged"
+        menu.choice "Shield"
+        menu.choice "Pilot"
+    end
 end
 
 def feature_menu
@@ -67,7 +88,7 @@ def title_menu
     end
 end
 
-def create_table(this_user)
+def create_user_data_table(this_user)
     TTY::Table.new(
         [   "Part",             "Name",                         "  ",   "Type",       "S"],
         [
@@ -82,6 +103,44 @@ def create_table(this_user)
             ["Pilot",           this_user[:pilot],           "  ",   nil,          nil]
         ]
     )  
+end
+
+def search_parts(category)
+    user_input = request_part_name("Please enter a Gundam name: ")
+    CSV.foreach("#{category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        if row[:name] == user_input
+            part_details = TTY::Table.new(
+                [
+                    ["Name",       row[:name]],
+                    ["", ""],
+                    ["Type",       row[:type]],
+                    ["Armor",      row[:armor]], 
+                    ["Melee ATK",  row[:melee_atk]], 
+                    ["Shot ATK",   row[:shot_atk]], 
+                    ["Melee DEF",  row[:melee_def]], 
+                    ["Shot DEF",   row[:shot_def]], 
+                    ["Beam RES",   row[:beam_res]], 
+                    ["Phys RES",   row[:phys_res]],
+                    ["", ""],
+                    ["EX Skill",        row[:ex_skill_name]],
+                    ["Skill Type",      row[:ex_skill_type]],
+                    ["Pierce",          row[:ex_skill_pierce]],
+                    ["Power",           row[:ex_skill_power]],
+                    ["Initial Charge",  row[:ex_skill_initial_cooldown]],
+                    ["Cooldown",        row[:ex_skill_cooldown]],
+                    ["", ""],
+                    ["Trait 1",    row[:trait_1_description]],
+                    ["Trait 2",    row[:trait_2_description]],
+                    ["", ""],      
+                    ["Word Tag 1", row[:word_tag_1]],
+                    ["Word Tag 2", row[:word_tag_2]]
+                ]
+            )
+            puts part_details.render(:unicode, alignments: [:left, :center])
+            return row
+        end
+    end
+    puts "Invalid name".colorize(:red)
 end
 
 def load_all_users
@@ -120,7 +179,7 @@ when "Sign up"
         user_choice = feature_menu
         case user_choice
         when "Review my current build"
-            current_build = create_table(this_user)
+            current_build = create_user_data_table(this_user)
             puts current_build.render(:unicode, alignments: [:left, :center])
         when "Start a new build"
             puts "a"
@@ -149,7 +208,7 @@ when "Log in"
                 user_choice = feature_menu
                 case user_choice
                 when "Review my current build"
-                    current_build = create_table(this_user)
+                    current_build = create_user_data_table(this_user)
                     puts current_build.render(:unicode, alignments: [:left, :center])
                 when "Start a new build"
                     users.each do |user|
@@ -167,7 +226,8 @@ when "Log in"
                     end
                     write_to_csv(users)
                 when "Search for parts by name"
-                    puts "b"
+                    user_choice = category_menu.downcase
+                    search_parts(user_choice)
                 when "Filter and sort parts"
                     puts "c"
                 when "Get a build recommendation"
@@ -178,9 +238,10 @@ when "Log in"
                 end
             end
         else
-            puts "Invalid password"
+            puts "Invalid password".colorize(:red)
         end
     else 
-        puts "Username not found \nPlease sign up for a new account"
+        puts "Username not found".colorize(:red) 
+        puts "Please sign up for a new account"
     end
 end

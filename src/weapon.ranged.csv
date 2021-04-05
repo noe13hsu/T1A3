@@ -1,3 +1,0 @@
-name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,ex_skill_name,ex_skill_type,ex_skill_pierce,ex_skill_power,ex_skill_cooldown,ex_skill_initial_cooldown,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source,category
-Strike Freedom Gundam,S,Yes,1924,0,11432,0,1924,746,1850,Ace Excl.,Gundam Type,nil,nil,nil,nil,nil,nil,EX Skill Power,With Speed attribute(self) EX Skill power boosted 30%,Shooting Power,Long-Shooter Job Shooting power boosted 35%,Limited,Twin Rifle
-Infinity Justice,T,Yes,3471,934,10469,0,0,0,2633,Close Combat,Gundam Type,nil,nil,nil,nil,nil,nil,EX Skill Power,With Technique attribute(self) EX Skill power boosted 30%,EX Skill Power,Back Parts's EX Skill power boosted 35%,Limited,Rifle
