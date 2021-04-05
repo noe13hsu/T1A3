@@ -6,7 +6,6 @@ require "ruby_figlet"
 require "lolize"
 using RubyFiglet
 colorizer = Lolize::Colorizer.new
-# prompt = TTY::Prompt.new
 
 def append_to_user_csv(username, password, head=nil, body=nil, arm=nil, leg=nil, back=nil, weapon_melee=nil, weapon_ranged=nil, shield=nil, pilot=nil)
     CSV.open("user.csv", "a") do |row|
@@ -58,7 +57,7 @@ def request_password(message)
 end
 
 def to_update_build?(user_choice_category, user_choice_part, this_user)
-    prompt = TTY::Prompt.new
+    prompt = TTY::Prompt.new(active_color: :blue)
     answer = prompt.select("Would you like to update your build?") do |menu|
         menu.choice "Yes"
         menu.choice "No"
@@ -76,7 +75,7 @@ def to_update_build?(user_choice_category, user_choice_part, this_user)
 end
 
 def category_menu
-    prompt = TTY::Prompt.new
+    prompt = TTY::Prompt.new(active_color: :blue)
     prompt.select("Please select a category") do |menu|
         menu.choice "Head"
         menu.choice "Body"
@@ -91,7 +90,7 @@ def category_menu
 end
 
 def feature_menu
-    prompt = TTY::Prompt.new
+    prompt = TTY::Prompt.new(active_color: :blue)
     prompt.select("What would you like to do?") do |menu|
         menu.choice "Review my current build"
         menu.choice "Start a new build"
@@ -103,7 +102,7 @@ def feature_menu
 end
 
 def attribute_menu
-    prompt = TTY::Prompt.new
+    prompt = TTY::Prompt.new(active_color: :blue)
     user_selection = user_choice_stat = prompt.select("Please select an attribute") do |menu|
         menu.choice "Armor"
         menu.choice "Melee Attack"
@@ -132,7 +131,7 @@ def attribute_menu
 end
 
 def title_menu
-    prompt = TTY::Prompt.new
+    prompt = TTY::Prompt.new(active_color: :blue)
     prompt.select("What would you like to do?") do |menu|
         menu.choice "Sign up"
         menu.choice "Log in"
@@ -214,7 +213,7 @@ def search_and_display_parts
 end
 
 def sort_and_display_parts
-    prompt = TTY::Prompt.new
+    prompt = TTY::Prompt.new(active_color: :blue)
     user_choice_category = category_menu.downcase
     selected_category = load_parts(user_choice_category)
     user_choice_stat = attribute_menu
