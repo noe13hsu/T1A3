@@ -2,7 +2,7 @@ require "csv"
 require "tty-prompt"
 require "tty-table"
 require "colorize"
-# prompt = TTY::Prompt.new
+prompt = TTY::Prompt.new
 
 def append_to_user_csv(username, password, head=nil, body=nil, arm=nil, leg=nil, back=nil, weapon_melee=nil, weapon_ranged=nil, shield=nil, pilot=nil)
     CSV.open("user.csv", "a") do |row|
@@ -80,6 +80,35 @@ def feature_menu
     end
 end
 
+def stats_menu
+    prompt = TTY::Prompt.new
+    user_selection = user_choice_stat = prompt.select("Please select a stat to sort parts") do |menu|
+        menu.choice "Armor"
+        menu.choice "Melee Attack"
+        menu.choice "Shot Attack"
+        menu.choice "Melee Defence"
+        menu.choice "Shot Defence"
+        menu.choice "Beam Resistance"
+        menu.choice "Phys Resistance"
+    end
+    case user_selection
+        when "Armor"
+            return :armor
+        when "Melee Attack"
+            return :melee_atk
+        when "Shot Attack"
+            return :shot_atk
+        when "Melee Defence"
+            return :melee_def
+        when "Shot Defence"
+            return :shot_def
+        when "Beam Resistance"
+            return :beam_res
+        when "Phys Resistance"
+            return :phys_res
+    end
+end
+
 def title_menu
     prompt = TTY::Prompt.new
     prompt.select("What would you like to do?") do |menu|
@@ -152,10 +181,63 @@ def load_all_users
     return all_users
 end
 
+def load_all_parts(category)
+    all_parts = []
+    CSV.foreach("#{category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        headers ||= row.headers
+        all_parts << row
+    end
+    return all_parts
+end
+
+def sort_parts(user_choice_category, user_choice_stat)
+    prompt = TTY::Prompt.new
+    filtered_category = load_all_parts(user_choice_category)
+    user_choice_stat = stats_menu
+    filtered_category.sort! { |part1, part2| part2[user_choice_stat].to_i <=> part1[user_choice_stat].to_i }
+    user_choice_part = prompt.select("Please select a part to view its deatils") do |menu|
+        filtered_category.first(3).each do |part|
+            menu.choice part[:name]
+        end
+    end
+    CSV.foreach("#{user_choice_category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        if row[:name] == user_choice_part
+            part_details = TTY::Table.new(
+                [
+                    ["Name",       row[:name]],
+                    ["", ""],
+                    ["Type",       row[:type]],
+                    ["Armor",      row[:armor]], 
+                    ["Melee ATK",  row[:melee_atk]], 
+                    ["Shot ATK",   row[:shot_atk]], 
+                    ["Melee DEF",  row[:melee_def]], 
+                    ["Shot DEF",   row[:shot_def]], 
+                    ["Beam RES",   row[:beam_res]], 
+                    ["Phys RES",   row[:phys_res]],
+                    ["", ""],
+                    ["EX Skill",        row[:ex_skill_name]],
+                    ["Skill Type",      row[:ex_skill_type]],
+                    ["Pierce",          row[:ex_skill_pierce]],
+                    ["Power",           row[:ex_skill_power]],
+                    ["Initial Charge",  row[:ex_skill_initial_cooldown]],
+                    ["Cooldown",        row[:ex_skill_cooldown]],
+                    ["", ""],
+                    ["Trait 1",    row[:trait_1_description]],
+                    ["Trait 2",    row[:trait_2_description]],
+                    ["", ""],      
+                    ["Word Tag 1", row[:word_tag_1]],
+                    ["Word Tag 2", row[:word_tag_2]]
+                ]
+            )
+            puts part_details.render(:unicode, alignments: [:left, :center])
+        end
+    end    
+end
+
 users = load_all_users
 is_signed_in = false
 # p all_users
-
+system("clear")
 puts "Welcome to GBM Helper"
 
 user_choice = title_menu
@@ -229,7 +311,56 @@ when "Log in"
                     user_choice = category_menu.downcase
                     search_parts(user_choice)
                 when "Filter and sort parts"
-                    puts "c"
+                    user_choice = category_menu.downcase
+                    sort_parts(user_choice, :armor)
+                    # filtered_category = load_all_parts(user_choice)
+                    # user_choice_stat = prompt.select("Please select a stat to sort parts") do |menu|
+                    #     menu.choice "Armor"
+                    #     menu.choice "Melee_ATK"
+                    #     menu.choice "Shot_ATK"
+                    #     menu.choice "Melee_DEF"
+                    #     menu.choice "Shot_DEF"
+                    #     menu.choice "Beam_RES"
+                    #     menu.choice "Phys_RES"
+                    # end
+                    # filtered_category.sort! { |part1, part2| part2[:shot_atk].to_i <=> part1[:shot_atk].to_i }
+                    # user_choice = prompt.select("Please select a part to view its deatils") do |menu|
+                    #     filtered_category.first(3).each do |part|
+                    #         menu.choice part[:name]
+                    #     end
+                    # end
+                    # CSV.foreach("head.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+                    #     if row[:name] == user_choice
+                    #         part_details = TTY::Table.new(
+                    #             [
+                    #                 ["Name",       row[:name]],
+                    #                 ["", ""],
+                    #                 ["Type",       row[:type]],
+                    #                 ["Armor",      row[:armor]], 
+                    #                 ["Melee ATK",  row[:melee_atk]], 
+                    #                 ["Shot ATK",   row[:shot_atk]], 
+                    #                 ["Melee DEF",  row[:melee_def]], 
+                    #                 ["Shot DEF",   row[:shot_def]], 
+                    #                 ["Beam RES",   row[:beam_res]], 
+                    #                 ["Phys RES",   row[:phys_res]],
+                    #                 ["", ""],
+                    #                 ["EX Skill",        row[:ex_skill_name]],
+                    #                 ["Skill Type",      row[:ex_skill_type]],
+                    #                 ["Pierce",          row[:ex_skill_pierce]],
+                    #                 ["Power",           row[:ex_skill_power]],
+                    #                 ["Initial Charge",  row[:ex_skill_initial_cooldown]],
+                    #                 ["Cooldown",        row[:ex_skill_cooldown]],
+                    #                 ["", ""],
+                    #                 ["Trait 1",    row[:trait_1_description]],
+                    #                 ["Trait 2",    row[:trait_2_description]],
+                    #                 ["", ""],      
+                    #                 ["Word Tag 1", row[:word_tag_1]],
+                    #                 ["Word Tag 2", row[:word_tag_2]]
+                    #             ]
+                    #         )
+                    #         puts part_details.render(:unicode, alignments: [:left, :center])
+                    #     end
+                    # end    
                 when "Get a build recommendation"
                     puts "d"
                 when "Log out"
