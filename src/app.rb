@@ -63,9 +63,11 @@ def to_update_build?(user_choice_category, user_choice_part, this_user)
     when "Yes"
         this_user[:"#{user_choice_category}"] = user_choice_part
         puts "Build updated"
+        return true
         # puts this_user, user_choice_category, user_choice_part
     when "No"
         puts "Build not updated"
+        return false
     end
 end
 
@@ -338,13 +340,17 @@ when "Log in"
                 when "Search for parts by name"
                     user_choice_part, user_choice_category, is_table_created = search_and_display_parts
                     if is_table_created
-                        to_update_build?(user_choice_category, user_choice_part, this_user)
+                        build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
+                        if build_updated
+                            write_to_csv(users)
+                        end
                     end
-                    write_to_csv(users)
                 when "Filter and sort parts"
                     user_choice_part, user_choice_category = sort_and_display_parts
-                    to_update_build?(user_choice_category, user_choice_part, this_user)
-                    write_to_csv(users)
+                    build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
+                    if build_updated
+                        write_to_csv(users)
+                    end
                 when "Get a build recommendation"
                     puts "d"
                 when "Log out"
