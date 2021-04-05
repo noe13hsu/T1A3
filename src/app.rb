@@ -305,13 +305,23 @@ when "Sign up"
         case user_choice_feature
         when "Review my current build"
             create_user_data_table(this_user)
-            
         when "Start a new build"
-            puts "a"
+            reset_build(users, this_user)
+            write_to_csv(users)
         when "Search for parts by name"
-            puts "b"
+            user_choice_part, user_choice_category, is_table_created = search_and_display_parts
+            if is_table_created
+                build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
+                if build_updated
+                    write_to_csv(users)
+                end
+            end
         when "Filter and sort parts"
-            puts "c"
+            user_choice_part, user_choice_category = sort_and_display_parts
+            build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
+            if build_updated
+                write_to_csv(users)
+            end
         when "Get a build recommendation"
             puts "d"
         when "Log out"
