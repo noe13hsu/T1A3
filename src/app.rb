@@ -2,6 +2,10 @@ require "csv"
 require "tty-prompt"
 require "tty-table"
 require "colorize"
+require "ruby_figlet"
+require "lolize"
+using RubyFiglet
+colorizer = Lolize::Colorizer.new
 # prompt = TTY::Prompt.new
 
 def append_to_user_csv(username, password, head=nil, body=nil, arm=nil, leg=nil, back=nil, weapon_melee=nil, weapon_ranged=nil, shield=nil, pilot=nil)
@@ -132,6 +136,7 @@ def title_menu
     prompt.select("What would you like to do?") do |menu|
         menu.choice "Sign up"
         menu.choice "Log in"
+        menu.choice "Quit"
     end
 end
 
@@ -277,15 +282,21 @@ def reset_build(users, this_user)
     end
 end
 
+# ---------------------------Program---------------------------------------
 system("clear")
+
+puts "=========================================================================".colorize(:blue)
+welcome_message = "WELCOME    TO\n  GBM    HELPER\n"
+welcome_message.art!
+puts welcome_message.colorize(:blue)
+puts ""
+puts "=========================================================================".colorize(:blue)
 
 users = load_all_users
 is_signed_in = false
-
-puts "Welcome to GBM Helper"
-
 user_choice_title = title_menu
 case user_choice_title
+# ---------------------------Sign-up---------------------------------------
 when "Sign up"
     username = request_username("Please enter a username: ")
     is_username_found = username_registered?(username)
@@ -326,9 +337,10 @@ when "Sign up"
             puts "d"
         when "Log out"
             is_signed_in = false
-            puts "Thank you for using GBM Helper"
+            colorizer.write "Thank you for using GBM Helper"
         end
     end
+# ----------------------------Log in---------------------------------------
 when "Log in"
     username = request_username("Please enter your username: ")
     is_username_found = username_registered?(username)
@@ -365,7 +377,7 @@ when "Log in"
                     puts "d"
                 when "Log out"
                     is_signed_in = false
-                    puts "Thank you for using GBM Helper"
+                    colorizer.write "Thank you for using GBM Helper"
                 end
             end
         else
@@ -375,4 +387,7 @@ when "Log in"
         puts "Username not found".colorize(:red) 
         puts "Please sign up for a new account"
     end
+# ----------------------------Quit-----------------------------------------
+when "Quit"
+    colorizer.write "Thank you for using GBM Helper"
 end
