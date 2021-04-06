@@ -23,10 +23,6 @@ Inside terminal to install gem bundle
 bundle install
 ```
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 77deea945f21d2c4cabe1d1b9dbb45f953b050cf
 ## Referenced sources
 * Parts' names in English - [Dengeki Wiki](https://g-b-en.ggame.jp/wiki/)
 * Parts' stats and details - [Dengeki Wiki Japan](https://wiki.dengekionline.com/gbm/)

@@ -76,7 +76,7 @@ end
 
 def category_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    prompt.select("Please select a category") do |menu|
+    prompt.select("Please select a category", per_page: 9) do |menu|
         menu.choice "Head"
         menu.choice "Body"
         menu.choice "Arm"
@@ -103,7 +103,7 @@ end
 
 def attribute_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    user_selection = user_choice_stat = prompt.select("Please select an attribute") do |menu|
+    user_selection = user_choice_stat = prompt.select("Please select an attribute", per_page: 7) do |menu|
         menu.choice "Armor"
         menu.choice "Melee Attack"
         menu.choice "Shot Attack"
