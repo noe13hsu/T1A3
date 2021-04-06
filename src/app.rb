@@ -148,7 +148,8 @@ def sum_stat(this_user)
         melee_def: 0,
         shot_def: 0,
         beam_res: 0,
-        phys_res: 0
+        phys_res: 0,
+        type: {S: 0, P: 0, T: 0}
     }
     i = 0
     while i < categories.length do
@@ -161,6 +162,13 @@ def sum_stat(this_user)
                 user_stats[:shot_def] += row[:shot_def].to_i
                 user_stats[:beam_res] += row[:beam_res].to_i
                 user_stats[:phys_res] += row[:phys_res].to_i
+                if row[:type] == "S"
+                    user_stats[:type][:S] += 1
+                elsif row[:type] == "P"
+                    user_stats[:type][:P] += 1
+                elsif row[:type] == "T"
+                    user_stats[:type][:T] += 1
+                end
             end
         end
         i += 1
@@ -168,10 +176,22 @@ def sum_stat(this_user)
     return user_stats
 end
 
+def user_type(user_stats)
+    if user_stats[:type][:S] >= 5
+        return "S"
+    elsif user_stats[:type][:P] >= 5
+        return "P"
+    elsif user_stats[:type][:T] >= 5
+        return "T"
+    else
+        return "-"
+    end
+end
+
 def create_user_data_table(this_user)
     user_stats = sum_stat(this_user)
     current_build = TTY::Table.new(
-        [   "Part",             "Name",                         "  ",   "Type",       "S"],
+        [   "Part",             "Name",                         "  ",   "Type",    user_type(user_stats)],
         [
             ["Head",            this_user[:head],            "  ",   "Armor",      user_stats[:armor]], 
             ["Body",            this_user[:body],            "  ",   "Melee ATK",  user_stats[:melee_atk]], 
@@ -268,15 +288,15 @@ end
 def reset_build(users, this_user)
     users.each do |user|
         if user[:username] == this_user[:username]
-            user[:head] = nil
-            user[:body] = nil
-            user[:arm] = nil
-            user[:leg] = nil
-            user[:back] = nil
-            user[:weapon_melee] = nil
-            user[:weapon_ranged] = nil
-            user[:shield] = nil
-            user[:pilot] = nil
+            user[:head] = "-"
+            user[:body] = "-"
+            user[:arm] = "-"
+            user[:leg] = "-"
+            user[:back] = "-"
+            user[:weapon_melee] = "-"
+            user[:weapon_ranged] = "-"
+            user[:shield] = "-"
+            user[:pilot] = "-"
         end
     end
 end
@@ -321,7 +341,8 @@ when "Log in"
         if password == this_user[:password]
             puts "Successful login"
             is_signed_in = true
-        end 
+        end
+    else puts "Username not found".colorize(:red) 
     end
 # ----------------------------Quit-----------------------------------------
 when "Quit"
