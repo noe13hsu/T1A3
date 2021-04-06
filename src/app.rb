@@ -92,7 +92,7 @@ end
 def feature_menu
     prompt = TTY::Prompt.new(active_color: :blue)
     prompt.select("What would you like to do?") do |menu|
-        menu.choice "Review my current build"
+        menu.choice "View my current build"
         menu.choice "Start a new build"
         menu.choice "Search for parts by name"
         menu.choice "Filter and sort parts"
@@ -191,7 +191,7 @@ end
 def create_user_data_table(this_user)
     user_stats = sum_stat(this_user)
     current_build = TTY::Table.new(
-        [   "Part",             "Name",                         "  ",   "Type",    user_type(user_stats)],
+        [   "Part",             "Name",                      "  ",   "Type",       user_type(user_stats)],
         [
             ["Head",            this_user[:head],            "  ",   "Armor",      user_stats[:armor]], 
             ["Body",            this_user[:body],            "  ",   "Melee ATK",  user_stats[:melee_atk]], 
@@ -200,11 +200,12 @@ def create_user_data_table(this_user)
             ["Back",            this_user[:back],            "  ",   "Shot DEF",   user_stats[:shot_def]], 
             ["Melee Weapon",    this_user[:weapon_melee],    "  ",   "Beam RES",   user_stats[:beam_res]], 
             ["Ranged Weapon",   this_user[:weapon_ranged],   "  ",   "Phys RES",   user_stats[:phys_res]], 
-            ["Shield",          this_user[:shield],          "  ",   nil,          nil], 
-            ["Pilot",           this_user[:pilot],           "  ",   nil,          nil]
+            ["Shield",          this_user[:shield],          "  ",   "Word Tag 1", "-"], 
+            ["Pilot",           this_user[:pilot],           "  ",   "Word Tag 2", "-"],
+            ["Job",             "-",                         "  ",   "Word Tag 3", "-"]
         ]
     )
-    puts current_build.render(:unicode, alignments: [:left, :center])  
+    puts current_build.render(:unicode, alignments: [:left, :center, :center, :left, :center], column_widths: [15, 25, 2, 15, 25])  
 end
 
 def load_all_users
@@ -225,59 +226,82 @@ def load_parts(category)
     return all_parts
 end
 
-def search_and_display_parts
+def search_and_display_parts(this_user)
     user_choice_category = category_menu.downcase
     user_choice_part = request_part_name("Please enter a Gundam name: ")
-    is_table_created = create_parts_data_table(user_choice_category, user_choice_part)
+    is_table_created = create_parts_data_table(user_choice_category, user_choice_part, this_user)
     return user_choice_part, user_choice_category, is_table_created
 end
 
-def sort_and_display_parts
+def sort_and_display_parts(this_user)
     prompt = TTY::Prompt.new(active_color: :blue)
     user_choice_category = category_menu.downcase
     selected_category = load_parts(user_choice_category)
     user_choice_stat = attribute_menu
     selected_category.sort! { |part1, part2| part2[user_choice_stat].to_i <=> part1[user_choice_stat].to_i }
-    user_choice_part = prompt.select("Please select a part to view its details") do |menu|
+    user_choice_part = prompt.select("Please select a part") do |menu|
         selected_category.first(3).each do |part|
             menu.choice part[:name]
         end
     end
-    create_parts_data_table(user_choice_category, user_choice_part)
+    create_parts_data_table(user_choice_category, user_choice_part, this_user)
     return user_choice_part, user_choice_category
 end
 
-def create_parts_data_table(user_choice_category, user_choice_part)
+def part_in_use(user_choice_category, this_user)
+    CSV.foreach("#{user_choice_category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        if row[:name] == this_user[:"#{user_choice_category}"]
+            return row
+        end
+    end
+    return "-"
+end
+
+def color_stats(row, part_in_use, attr)
+    if row[attr].to_i - part_in_use[attr].to_i > 0
+        return row[:"#{attr}"].colorize(:blue)
+    elsif row[attr].to_i - part_in_use[attr].to_i < 0
+        return row[attr].colorize(:red)
+    else
+        return row[attr]
+    end    
+end 
+
+def create_parts_data_table(user_choice_category, user_choice_part, this_user)
+    part_in_use = part_in_use(user_choice_category, this_user)
+
     CSV.foreach("#{user_choice_category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
         if row[:name] == user_choice_part
             part_details = TTY::Table.new(
                 [
-                    ["Name",       row[:name]],
-                    ["", ""],
-                    ["Type",       row[:type]],
-                    ["Armor",      row[:armor]], 
-                    ["Melee ATK",  row[:melee_atk]], 
-                    ["Shot ATK",   row[:shot_atk]], 
-                    ["Melee DEF",  row[:melee_def]], 
-                    ["Shot DEF",   row[:shot_def]], 
-                    ["Beam RES",   row[:beam_res]], 
-                    ["Phys RES",   row[:phys_res]],
-                    ["", ""],
-                    ["EX Skill",        row[:ex_skill_name]],
-                    ["Skill Type",      row[:ex_skill_type]],
-                    ["Pierce",          row[:ex_skill_pierce]],
-                    ["Power",           row[:ex_skill_power]],
-                    ["Initial Charge",  row[:ex_skill_initial_cooldown]],
-                    ["Cooldown",        row[:ex_skill_cooldown]],
-                    ["", ""],
-                    ["Trait 1",    row[:trait_1_description]],
-                    ["Trait 2",    row[:trait_2_description]],
-                    ["", ""],      
-                    ["Word Tag 1", row[:word_tag_1]],
-                    ["Word Tag 2", row[:word_tag_2]]
+                    ["Name",            part_in_use[:name],                         "==>",      row[:name]],
+                    ["--------------",  "-------------------------",                "",         "-------------------------"],
+                    ["Type",            part_in_use[:type],                         "==>",      row[:type]],
+                    ["Armor",           part_in_use[:armor],                        "==>",      color_stats(row, part_in_use, :armor)], 
+                    ["Melee ATK",       part_in_use[:melee_atk],                    "==>",      color_stats(row, part_in_use, :melee_atk)], 
+                    ["Shot ATK",        part_in_use[:shot_atk],                     "==>",      color_stats(row, part_in_use, :shot_atk)], 
+                    ["Melee DEF",       part_in_use[:melee_def],                    "==>",      color_stats(row, part_in_use, :melee_def)], 
+                    ["Shot DEF",        part_in_use[:shot_def],                     "==>",      color_stats(row, part_in_use, :shot_def)], 
+                    ["Beam RES",        part_in_use[:beam_res],                     "==>",      color_stats(row, part_in_use, :beam_res)], 
+                    ["Phys RES",        part_in_use[:phys_res],                     "==>",      color_stats(row, part_in_use, :phys_res)],
+                    ["--------------",  "-------------------------",                "",         "-------------------------"],
+                    ["EX Skill",        part_in_use[:ex_skill_name],                "==>",      row[:ex_skill_name]],
+                    ["Skill Type",      part_in_use[:ex_skill_type],                "==>",      row[:ex_skill_type]],
+                    ["Pierce",          part_in_use[:ex_skill_pierce],              "==>",      row[:ex_skill_pierce]],
+                    ["Power",           part_in_use[:ex_skill_power],               "==>",      row[:ex_skill_power]],
+                    ["Initial Charge",  part_in_use[:ex_skill_initial_cooldown],    "==>",      row[:ex_skill_initial_cooldown]],
+                    ["Cooldown",        part_in_use[:ex_skill_cooldown],            "==>",      row[:ex_skill_cooldown]],
+                    ["--------------",  "-------------------------",                "",         "-------------------------"],
+                    ["Trait 1",         part_in_use[:trait_1_description],          "==>",      row[:trait_1_description]],
+                    ["Trait 2",         part_in_use[:trait_2_description],          "==>",      row[:trait_2_description]],
+                    ["--------------",  "-------------------------",                "",         "-------------------------"],  
+                    ["Word Tag 1",      part_in_use[:word_tag_1],                   "==>",      row[:word_tag_1]],
+                    ["Word Tag 2",      part_in_use[:word_tag_2],                   "==>",      row[:word_tag_2]],
+                    ["--------------",  "-------------------------",                "",         "-------------------------"],
+                    ["Source",          part_in_use[:source],                       "==>",      row[:source]]
                 ]
             )
-            puts part_details.render(:unicode, alignments: [:left, :center])
+            puts part_details.render(:unicode, multiline: true, alignments: [:left, :center, :center, :center], column_widths: [14, 25, 5, 25])
             return row
         end
     end
@@ -304,12 +328,12 @@ end
 # ---------------------------Program---------------------------------------
 system("clear")
 
-puts "=========================================================================".colorize(:blue)
+puts "=== == == == == == == == == == == == == == == == == == == == == == == ===".colorize(:blue)
 welcome_message = "WELCOME    TO\n  GBM    HELPER\n"
 welcome_message.art!
 puts welcome_message.colorize(:blue)
 puts ""
-puts "=========================================================================".colorize(:blue)
+puts "=== == == == == == == == == == == == == == == == == == == == == == == ===".colorize(:blue)
 
 users = load_all_users
 is_signed_in = false
@@ -326,6 +350,7 @@ when "Sign up"
     password = request_password("Please enter a password: ")
     puts "Successful sign-up"
     append_to_user_csv(username, password)
+    users = load_all_users
     this_user = load_user_details(users, username)
     is_signed_in = true
 # ----------------------------Log in---------------------------------------
@@ -367,28 +392,23 @@ end
 while is_signed_in
     user_choice_feature = feature_menu
     case user_choice_feature
-    when "Review my current build"
+    when "View my current build"
         create_user_data_table(this_user)
     when "Start a new build"
         reset_build(users, this_user)
         write_to_csv(users)
     when "Search for parts by name"
-        user_choice_part, user_choice_category, is_table_created = search_and_display_parts
+        user_choice_part, user_choice_category, is_table_created = search_and_display_parts(this_user)
         if is_table_created
             build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
-            if build_updated
-                write_to_csv(users)
-            end
         end
     when "Filter and sort parts"
-        user_choice_part, user_choice_category = sort_and_display_parts
+        user_choice_part, user_choice_category = sort_and_display_parts(this_user)
         build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
-        if build_updated
-            write_to_csv(users)
-        end
     when "Get a build recommendation"
         puts "d"
     when "Log out"
+        write_to_csv(users)
         is_signed_in = false
         colorizer.write "Thank you for using GBM Helper"
     end

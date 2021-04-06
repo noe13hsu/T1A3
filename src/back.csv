@@ -2,3 +2,4 @@ name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_r
 Strike Freedom Gundam,S,Yes,2445,1717,3290,2654,3961,988,3155,Ace Excl.,High Mobility,HiMAT Mode,Beam Shot,A-,A,79s,8s,-,-,-,-,Limited
 Infinity Justice Gundam,T,Yes,2831,3306,2673,3290,2462,1417,2977,Close Combat,High Mobility,Fatum-01,Beam Melee,D,S,79s,20s,-,-,-,-,Limited
 Delta Plus,P,Yes,2824,944,944,2824,1919,1170,1170,Transformer,Mid-Range,-,-,-,-,-,-,EX Skill Effect,With Power attribute(self) Buff EX Skill effect up 15%,Vernier Consumption Reduction,When Armor is 60% or more Vernier consumption reduced 20%,Event
+-,-,-,0,0,0,0,0,0,0,-,-,-,-,-,-,-,-,-,-,-,-,-

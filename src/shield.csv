@@ -1,3 +1,3 @@
 name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,ex_skill_name,ex_skill_type,ex_skill_pierce,ex_skill_power,ex_skill_cooldown,ex_skill_initial_cooldown,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source
 Infinity Justice Gundam,T,Yes,1527,3456,2454,2456,1527,3720,1406,Close Combat,High Mobility,Shining Edge,Beam Melee,D,A-,21s,6s,-,-,-,-,Limited
-
+-,-,-,0,0,0,0,0,0,0,-,-,-,-,-,-,-,-,-,-,-,-,-

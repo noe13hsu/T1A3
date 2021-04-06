@@ -12,7 +12,18 @@ Gundam Breaker Mobile provides a large number of collectible parts with differen
 * a recommendation feature to recommend parts to users and display how their stats will change by using the recommended parts
 
 Gundam Breaker Mobile now has a Japanese version and a global version which includes language options of English, Chinese, and Korean. GBM Helper will first look to assist users who are playing the English version until the app supports other language options. Users will be able to log into the GBM Helper to view their current build, if there is a part that they know will imporve their build, they can use the search feature to search for the part and update their build. Otherwise, they can take advantage of the filter/sort feature and recommendation feature to find ideas on how to improve their build, and they will be able to overwrite their existing build.
- 
+
+## Installation
+To clone the project
+```
+git clone https://github.com/noe13hsu/T1A3---GBM-Helper.git
+```
+Inside terminal to install gem bundle
+```
+bundle install
+```
+
+
 ## Referenced sources
 * Parts' names in English - [Dengeki Wiki](https://g-b-en.ggame.jp/wiki/)
 * Parts' stats and details - [Dengeki Wiki Japan](https://wiki.dengekionline.com/gbm/)
