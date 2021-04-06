@@ -1,5 +1,6 @@
 username,password,head,body,arm,leg,back,weapon_melee,weapon_ranged,shield,pilot
-noe111,111,Delta Plus,Infinity Justice Gundam,,,,,,,
+noe111,111,Delta Plus,,Strike Freedom Gundam,,,,,,
 noe222,222,,,,,,,,,
-noe444,444,Strike Freedom Gundam,,,,,,,,
-noe333,333,Strike Freedom Gundam,,,,,,,,
+noe444,444,Delta Plus,,,,,,,,
+noe333,333,Infinity Justice Gundam,,,,,,,,
+noe555,555,,,Infinity Justice Gundam,,,,,,

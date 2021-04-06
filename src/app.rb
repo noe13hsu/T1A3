@@ -310,35 +310,6 @@ when "Sign up"
     this_user = load_user_details(users, username)
     # p this_user
     is_signed_in = true
-    while is_signed_in
-        user_choice_feature = feature_menu
-        case user_choice_feature
-        when "Review my current build"
-            create_user_data_table(this_user)
-        when "Start a new build"
-            reset_build(users, this_user)
-            write_to_csv(users)
-        when "Search for parts by name"
-            user_choice_part, user_choice_category, is_table_created = search_and_display_parts
-            if is_table_created
-                build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
-                if build_updated
-                    write_to_csv(users)
-                end
-            end
-        when "Filter and sort parts"
-            user_choice_part, user_choice_category = sort_and_display_parts
-            build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
-            if build_updated
-                write_to_csv(users)
-            end
-        when "Get a build recommendation"
-            puts "d"
-        when "Log out"
-            is_signed_in = false
-            colorizer.write "Thank you for using GBM Helper"
-        end
-    end
 # ----------------------------Log in---------------------------------------
 when "Log in"
     username = request_username("Please enter your username: ")
@@ -350,43 +321,44 @@ when "Log in"
         if password == this_user[:password]
             puts "Successful login"
             is_signed_in = true
-            while is_signed_in
-                user_choice_feature = feature_menu
-                case user_choice_feature
-                when "Review my current build"
-                    create_user_data_table(this_user)
-                when "Start a new build"
-                    reset_build(users, this_user)
-                    write_to_csv(users)
-                when "Search for parts by name"
-                    user_choice_part, user_choice_category, is_table_created = search_and_display_parts
-                    if is_table_created
-                        build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
-                        if build_updated
-                            write_to_csv(users)
-                        end
-                    end
-                when "Filter and sort parts"
-                    user_choice_part, user_choice_category = sort_and_display_parts
-                    build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
-                    if build_updated
-                        write_to_csv(users)
-                    end
-                when "Get a build recommendation"
-                    puts "d"
-                when "Log out"
-                    is_signed_in = false
-                    colorizer.write "Thank you for using GBM Helper"
-                end
-            end
-        else
-            puts "Invalid password".colorize(:red)
-        end
-    else 
-        puts "Username not found".colorize(:red) 
-        puts "Please sign up for a new account"
+        end 
     end
 # ----------------------------Quit-----------------------------------------
 when "Quit"
-    colorizer.write "Thank you for using GBM Helper"
+    colorizer.write "Thank you for using GBM Helper"    
 end
+# ----------------------------Signed in------------------------------------
+while is_signed_in
+    user_choice_feature = feature_menu
+    case user_choice_feature
+    when "Review my current build"
+        create_user_data_table(this_user)
+    when "Start a new build"
+        reset_build(users, this_user)
+        write_to_csv(users)
+    when "Search for parts by name"
+        user_choice_part, user_choice_category, is_table_created = search_and_display_parts
+        if is_table_created
+            build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
+            if build_updated
+                write_to_csv(users)
+            end
+        end
+    when "Filter and sort parts"
+        user_choice_part, user_choice_category = sort_and_display_parts
+        build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
+        if build_updated
+            write_to_csv(users)
+        end
+    when "Get a build recommendation"
+        puts "d"
+    when "Log out"
+        is_signed_in = false
+        colorizer.write "Thank you for using GBM Helper"
+    end
+end
+
+
+
+
+
