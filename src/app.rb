@@ -326,19 +326,34 @@ when "Sign up"
     password = request_password("Please enter a password: ")
     puts "Successful sign-up"
     append_to_user_csv(username, password)
-    users = load_all_users
     this_user = load_user_details(users, username)
-    # p this_user
     is_signed_in = true
 # ----------------------------Log in---------------------------------------
 when "Log in"
     username = request_username("Please enter your username: ")
     is_username_found = username_registered?(username)
     if is_username_found == true
-        users = load_all_users
         this_user = load_user_details(users, username)
-        password = request_password("Please enter your password: ")
-        if password == this_user[:password]
+        password = ""
+        input_count = 0
+        input_limit = 3
+        out_of_input = false
+        while password != this_user[:password] and !out_of_input
+            if input_count == 0 
+                password = request_password("Please enter your password: ")
+                input_count += 1
+            elsif input_count > 0 and input_count < input_limit
+                puts ("Invalid password").colorize(:red)
+                password = request_password("Please enter your password: ")
+                input_count += 1
+            else
+                out_of_input = true
+            end
+        end
+        if out_of_input
+            puts ("Invalid password").colorize(:red)
+            puts "Please check your password"
+        else
             puts "Successful login"
             is_signed_in = true
         end
