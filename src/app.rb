@@ -312,15 +312,11 @@ end
 def reset_build(users, this_user)
     users.each do |user|
         if user[:username] == this_user[:username]
-            user[:head] = "-"
-            user[:body] = "-"
-            user[:arm] = "-"
-            user[:leg] = "-"
-            user[:back] = "-"
-            user[:weapon_melee] = "-"
-            user[:weapon_ranged] = "-"
-            user[:shield] = "-"
-            user[:pilot] = "-"
+            i = 2
+            while i < user.length do
+                user[i] = "-"
+                i += 1
+            end
         end
     end
 end
