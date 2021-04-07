@@ -1,3 +1,5 @@
-name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,ex_skill_name,ex_skill_type,ex_skill_pierce,ex_skill_power,ex_skill_cooldown,ex_skill_initial_cooldown,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source
-Infinity Justice Gundam,T,Yes,1527,3456,2454,2456,1527,3720,1406,Close Combat,High Mobility,Shining Edge,Beam Melee,D,A-,21s,6s,-,-,-,-,Limited
--,-,-,0,0,0,0,0,0,0,-,-,-,-,-,-,-,-,-,-,-,-,-
+name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,ex_skill_name,ex_skill_type,ex_skill_pierce,ex_skill_power,ex_skill_magazine,ex_skill_cooldown,ex_skill_initial_cooldown,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source,large_scale
+Infinity Justice Gundam,T,Yes,1527,3456,2454,2456,1527,3720,1406,Close Combat,High Mobility,Shining Edge,Beam Melee,D,A-,-,21s,6s,-,-,-,-,Limited,No
+-,-,-,0,0,0,0,0,0,0,-,-,-,-,-,-,-,-,-,-,-,-,-,-
+Pale Rider,T,Yes,2485,562,571,4801,4797,1987,549,Federation,For Forest,-,-,-,-,-,-,-,Enemy Shooting Power Reduction,While "Federation" Enemy Shooting power reduced 30%,Shooting CRIT Rate,With Technique attribute(self) Shooting CRIT rate boosted 40%,Standard,Yes
+Gundam,T,Yes,2128,0,0,4826,4826,1128,1128,Protag.,Close Combat,-,-,-,-,-,-,-,Buff EX Skill Effect,With Technique attribute(self) Buff EX Skill effect up 22%,Buff EX Skill time,With Rifle category equipped Buff EX Skill time up 30%,Standard,No
