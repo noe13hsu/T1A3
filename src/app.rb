@@ -6,6 +6,7 @@ require "ruby_figlet"
 require "lolize"
 
 require_relative "method"
+require_relative "menu"
 using RubyFiglet
 colorizer = Lolize::Colorizer.new
 
@@ -21,13 +22,16 @@ def sum_stats(category, user_stats, this_user, ref_attr)
                 user_stats[:shot_def] += row[:shot_def].to_i
                 user_stats[:beam_res] += row[:beam_res].to_i
                 user_stats[:phys_res] += row[:phys_res].to_i
-                if row[:type] == "S"
+                case row[:type]
+                when "S"
                     user_stats[:type][:S] += 1
-                elsif row[:type] == "P"
+                when "P"
                     user_stats[:type][:P] += 1
-                elsif row[:type] == "T"
+                when "T"
                     user_stats[:type][:T] += 1
                 end
+                user_stats[:word_tags].push(row[:word_tag_1])
+                user_stats[:word_tags].push(row[:word_tag_2])
             end
         end
         i += 1
@@ -46,7 +50,8 @@ def user_build_stats(this_user)
         shot_def: 0,
         beam_res: 0,
         phys_res: 0,
-        type: {S: 0, P: 0, T: 0}
+        type: {S: 0, P: 0, T: 0},
+        word_tags: []
     }
     sum_stats_non_weapon = sum_stats(non_weapon_categories, user_stats, this_user, :name)
     sum_stats_all_parts = sum_stats(weapon_categories, sum_stats_non_weapon, this_user, :weapon_name)
@@ -55,8 +60,12 @@ end
 
 def create_user_data_table(this_user)
     user_stats = user_build_stats(this_user)
+    # p this_user
+    # get_pilot_job(this_user)
+    pilot_job_1, pilot_job_2 = get_pilot_job(this_user)
+    word_tag_1, word_tag_2, word_tag_3 = get_active_word_tags(user_stats[:word_tags])
     current_build = TTY::Table.new(
-        [   "Part",             "Name",                      "  ",   "Type",       user_type(user_stats)],
+        [   "Part",             "Name",                      "  ",   "Type",       get_build_type(user_stats)],
         [
             ["Head",            this_user[:head],            "  ",   "Armor",      user_stats[:armor]], 
             ["Body",            this_user[:body],            "  ",   "Melee ATK",  user_stats[:melee_atk]], 
@@ -65,9 +74,10 @@ def create_user_data_table(this_user)
             ["Back",            this_user[:back],            "  ",   "Shot DEF",   user_stats[:shot_def]], 
             ["Melee Weapon",    this_user[:weapon_melee],    "  ",   "Beam RES",   user_stats[:beam_res]], 
             ["Ranged Weapon",   this_user[:weapon_ranged],   "  ",   "Phys RES",   user_stats[:phys_res]], 
-            ["Shield",          this_user[:shield],          "  ",   "Word Tag 1", "-"], 
-            ["Pilot",           this_user[:pilot],           "  ",   "Word Tag 2", "-"],
-            ["Job",             "-",                         "  ",   "Word Tag 3", "-"]
+            ["Shield",          this_user[:shield],          "  ",   "", ""], 
+            ["Pilot",           this_user[:pilot],           "  ",   "Active Word Tag", word_tag_1],
+            ["Job License",     pilot_job_1,                 "  ",   "Active Word Tag", word_tag_2],
+            ["Job License",     pilot_job_2,                 "  ",   "Active Word Tag", word_tag_3]
         ]
     )
     puts current_build.render(:unicode, alignments: [:left, :center, :center, :left, :center], column_widths: [15, 25, 2, 15, 25])  
@@ -95,26 +105,12 @@ end
 
 def sort_and_display_parts(this_user)
     filter_result = []
-    prompt = TTY::Prompt.new(active_color: :blue)
     user_choice_category = category_menu.downcase #weapon_ranged
     user_choice_weapon =  weapon_category_menu(user_choice_category) #rifle
     filter_result = load_parts(user_choice_category, user_choice_weapon) # array of all rifles
-    user_choice_stat = attribute_menu #shot atk
-    filter_result.sort! { |part1, part2| part2[user_choice_stat].to_i <=> part1[user_choice_stat].to_i } #sort all rifles by highest shot atk
-    case user_choice_category
-    when "weapon_melee", "weapon_ranged"
-        user_choice_part = prompt.select("Please select a part") do |menu| #user_choice_part = rifle name
-            filter_result.first(5).each do |part|
-                menu.choice part[:weapon_name] #display top 5 rifles 
-            end
-        end
-    when "head", "body", "arm", "leg", "back", "shield", "pilot"
-        user_choice_part = prompt.select("Please select a part") do |menu| #user_choice_part = rifle name
-            filter_result.first(5).each do |part|
-                menu.choice part[:name] #display top 5 rifles 
-            end
-        end
-    end
+    user_choice_attr = attribute_menu #shot atk
+    filter_result.sort! { |part1, part2| part2[user_choice_attr].to_i <=> part1[user_choice_attr].to_i } #sort all rifles by highest shot atk
+    user_choice_part = sorted_parts_menu(user_choice_category, filter_result)
     display_parts_data_table(user_choice_category, user_choice_part, this_user) #(weapon_ranged, rifle name, this_user)
     return user_choice_part, user_choice_category
 end
@@ -263,7 +259,7 @@ when "Sign up"
     password = request_password("Please enter a password: ")
     puts "Successful sign-up"
     append_to_user_csv(username, password)
-    users = load_all_users
+    users = load_data("user")
     this_user = load_user_details(users, username)
     is_signed_in = true
 # ----------------------------Log in---------------------------------------
@@ -290,7 +286,7 @@ when "Log in"
         end
         if out_of_input
             puts ("Invalid password").colorize(:red)
-            puts "Please check your password"
+            puts "Please check your password".colorize(:red)
         else
             puts "Successful login"
             is_signed_in = true

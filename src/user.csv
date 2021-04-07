@@ -1,3 +1,4 @@
-username,password,head,body,arm,leg,back,weapon_melee,weapon_ranged,shield,pilot,name_hyper_beam_saber_zz,"",name_gundam_gprasetwo_ten,name_zz_gundam,name_strike_freedom_gundam,name_shenlong_gundam,name_gundam_anima_rize,name_shin_musha_gundam_snj,name_gundam,name_gundam,name_aile_strike_gundam
-noe111,111,-,Strike Freedom Gundam,Strike Freedom Gundam,Strike Freedom Gundam,Strike Freedom Gundam,Screw Whip,Beam Gatling Gun [EW],-,Kira Yamato [Destiny],-,-,-,-,-,-,-,-,-,"[:weapon_name, ""Gundam Hammer [Gundam]""]","[:weapon_name, ""Armor Schneider [Aile Strike]""]"
-noe222,222,Strike Freedom Gundam,Infinity Justice Gundam,Strike Freedom Gundam,Delta Plus,Delta Plus,Strike Freedom Gundam,-,-,-,,,,,,,,,,,
+username,password,head,body,arm,leg,back,weapon_melee,weapon_ranged,shield,pilot
+noe111,111,Delta Plus,Delta Plus,Delta Plus,Delta Plus,Delta Plus,Gundam Hammer [Gundam],-,Pale Rider,-
+noe222,222,Strike Freedom Gundam,Infinity Justice Gundam,Strike Freedom Gundam,Delta Plus,Delta Plus,Strike Freedom Gundam,-,-,-
+noe333,333,,,,,,,,,

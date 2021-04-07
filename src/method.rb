@@ -5,7 +5,7 @@ def append_to_user_csv(username, password, head=nil, body=nil, arm=nil, leg=nil,
 end
 
 def write_to_csv(users)
-    headers = users.first.headers || ["username", "password", "build"]
+    headers = users.first.headers || ["username", "password", "head", "body", "arm", "leg", "back", "weapon_melee", "weapon_ranged", "shield", "pilot"]
     CSV.open("user.csv", "w") do |csv|
         csv << headers
         users.each do |user|
@@ -14,8 +14,17 @@ def write_to_csv(users)
     end
 end
 
+def load_data(filename)
+    data = []
+    CSV.foreach("#{filename}.csv", headers: true, header_converters: :symbol) do |row|
+        headers ||= row.headers
+        data << row
+    end
+    return data
+end
+
 def load_user_details(all_users, username)
-    all_users.each do |user|
+    all_users.each do |user| 
         if user[:username] == username
             return user
         end
@@ -25,7 +34,6 @@ end
 def username_registered?(username)
     CSV.foreach("user.csv", "a+", headers: true, header_converters: :symbol) do |row|
         if row[:username] == username
-            # puts row[0]
             return true
         end
     end
@@ -47,72 +55,7 @@ def request_password(message)
     return gets.chomp.downcase
 end
 
-def category_menu
-    prompt = TTY::Prompt.new(active_color: :blue)
-    prompt.select("Please select a category", per_page: 9) do |menu|
-        menu.choice "Head"
-        menu.choice "Body"
-        menu.choice "Arm"
-        menu.choice "Leg"
-        menu.choice "Back"
-        menu.choice "Weapon_Melee"
-        menu.choice "Weapon_Ranged"
-        menu.choice "Shield"
-        menu.choice "Pilot"
-    end
-end
-
-def feature_menu
-    prompt = TTY::Prompt.new(active_color: :blue)
-    prompt.select("What would you like to do?") do |menu|
-        menu.choice "View my current build"
-        menu.choice "Start a new build"
-        menu.choice "Search for parts by name"
-        menu.choice "Filter and sort parts"
-        menu.choice "Get a build recommendation"
-        menu.choice "Log out"
-    end
-end
-
-def attribute_menu
-    prompt = TTY::Prompt.new(active_color: :blue)
-    user_selection = prompt.select("Please select an attribute", per_page: 7) do |menu|
-        menu.choice "Armor"
-        menu.choice "Melee Attack"
-        menu.choice "Shot Attack"
-        menu.choice "Melee Defence"
-        menu.choice "Shot Defence"
-        menu.choice "Beam Resistance"
-        menu.choice "Phys Resistance"
-    end
-    case user_selection
-        when "Armor"
-            return :armor
-        when "Melee Attack"
-            return :melee_atk
-        when "Shot Attack"
-            return :shot_atk
-        when "Melee Defence"
-            return :melee_def
-        when "Shot Defence"
-            return :shot_def
-        when "Beam Resistance"
-            return :beam_res
-        when "Phys Resistance"
-            return :phys_res
-    end
-end
-
-def title_menu
-    prompt = TTY::Prompt.new(active_color: :blue)
-    prompt.select("What would you like to do?") do |menu|
-        menu.choice "Sign up"
-        menu.choice "Log in"
-        menu.choice "Quit"
-    end
-end
-
-def user_type(user_stats)
+def get_build_type(user_stats)
     if user_stats[:type][:S] >= 5
         return "S"
     elsif user_stats[:type][:P] >= 5
@@ -124,36 +67,10 @@ def user_type(user_stats)
     end
 end
 
-def load_data(filename)
-    data = []
-    CSV.foreach("#{filename}.csv", headers: true, header_converters: :symbol) do |row|
-        headers ||= row.headers
-        data << row
-    end
-    return data
-end
-
-def weapon_category_menu(user_choice_category)
-    prompt = TTY::Prompt.new(active_color: :blue)
-    case user_choice_category
-    when "weapon_ranged"
-        prompt.select("Please select a weapon category", per_page: 6) do |menu|
-            menu.choice "Bazooka"
-            menu.choice "Gatling Gun"
-            menu.choice "Long Rifle"
-            menu.choice "Machine Gun"
-            menu.choice "Rifle"
-            menu.choice "Twin Rifle"
-        end
-    when "weapon_melee"
-        prompt.select("Please select a weapon category", per_page: 8) do |menu|
-            menu.choice "Axe"
-            menu.choice "Blade"
-            menu.choice "Dual Saber"
-            menu.choice "Lance"
-            menu.choice "Saber"
-            menu.choice "Twin Blade"
-            menu.choice "Whip"
+def get_pilot_job(this_user)
+    CSV.foreach("pilot.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        if row[:name] == this_user[:pilot]
+            return row[:job_1], row[:job_2]
         end
     end
 end
@@ -181,11 +98,7 @@ def reset_build(users, this_user)
 end
 
 def to_update_build?(user_choice_category, user_choice_part, this_user)
-    prompt = TTY::Prompt.new(active_color: :blue)
-    answer = prompt.select("Would you like to update your build?") do |menu|
-        menu.choice "Yes"
-        menu.choice "No"
-    end
+    answer = yes_or_no
     case answer
     when "Yes"
         this_user[:"#{user_choice_category}"] = user_choice_part
@@ -195,5 +108,26 @@ def to_update_build?(user_choice_category, user_choice_part, this_user)
     when "No"
         puts "Build not updated"
         return false
+    end
+end
+
+def get_active_word_tags(word_tags)
+    active_word_tags = []
+    word_tag_counts = Hash.new(0)
+    word_tags.each { |word_tag| word_tag_counts[word_tag] += 1 }
+    word_tag_counts.each do |key, value|
+        if value >= 5
+            active_word_tags.push(key)
+        end
+    end
+    case active_word_tags.length
+    when 0
+        return "-", "-", "-"
+    when 1
+        return active_word_tags[0], "-", "-"
+    when 2
+        return active_word_tags[0], active_word_tags[1], "-"
+    when 3
+        return active_word_tags[0], active_word_tags[1], active_word_tags[2]
     end
 end

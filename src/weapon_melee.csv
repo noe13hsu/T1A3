@@ -11,9 +11,9 @@ Beam Javelin,Gundam,T,No,1987,7858,0,0,0,1050,1050,Protag.,Close Combat,Crimson 
 Beam Glaive,Shenlong Gundam,T,No,2920,3963,0,967,967,1512,1052,Close Combat,For Forest,Hell Jumper,Beam Melee,A-,D,-,30s,3s,-,-,-,-,Standard,Lance,No
 Beam Ribbon,Noble Gundam,T,No,967,9910,0,0,0,1056,1056,Mobile Fighter,For Urban Area,Beam Ribbon,Beam Melee,A,D,-,21s,3s,-,-,-,-,Standard,Whip,No
 Master Cloth,Master Gundam,P,No,967,9893,0,0,0,533,1050,Mobile Fighter,Close Combat,-,-,-,-,-,-,-,Strong Melee CRIT Rate,In-Fighter Job Strong Melee CRIT rate boosted 30%,-,-,Standard,Whip,No
-Rase-Two Kanasaibou [Strike],Gundam GP-Rase-Two Ten,S,No,1968,9796,0,0,0,1031,1031,High Firepower,Close Combat,Beam Bazooka Mode,Beam Shot,A+,D,11,60s,0s,-,-,-,-,Standard,Axe,No
-GN Ogre Sword Ni Shiki [Twin Blade],Gundam GP-Rase-Two Ten,S,No,1968,9796,0,0,0,1031,1031,High Firepower,For Computers,-,-,-,-,-,-,-,Enemy Melee Power Reduction,In-Fighter Job Enemy Melee power reduced 30%,-,-,Standard,Twin Blade,No
-GN Ogre Sword Ni Shiki,Gundam GP-Rase-Two Ten,S,No,1968,9796,0,0,0,1031,1031,High Firepower,Heavy Armor,-,-,-,-,-,-,-,Melee DMG Output,With Speed attribute(self) Melee DMG output boosted by 35,-,-,Standard,Dual Saber,No
+Rase-Two Kanasaibou [Strike],Gundam Gp-rase-two Ten,S,No,1968,9796,0,0,0,1031,1031,High Firepower,Close Combat,Beam Bazooka Mode,Beam Shot,A+,D,11,60s,0s,-,-,-,-,Standard,Axe,No
+GN Ogre Sword Ni Shiki [Twin Blade],Gundam Gp-rase-two Ten,S,No,1968,9796,0,0,0,1031,1031,High Firepower,For Computers,-,-,-,-,-,-,-,Enemy Melee Power Reduction,In-Fighter Job Enemy Melee power reduced 30%,-,-,Standard,Twin Blade,No
+GN Ogre Sword Ni Shiki,Gundam Gp-rase-two Ten,S,No,1968,9796,0,0,0,1031,1031,High Firepower,Heavy Armor,-,-,-,-,-,-,-,Melee DMG Output,With Speed attribute(self) Melee DMG output boosted by 35,-,-,Standard,Dual Saber,No
 Beam Saber [Full Armor 7th],Full Armor 7th Gundam,P,No,2888,5852,0,0,1968,1031,1480,Heavy Armor,For Space,-,-,-,-,-,-,-,EX Skill Power,While "For Space" EX Skill power boosted 30%,-,-,Standard,Dual Saber,No
 Grand Slam,Aile Strike Gundam,T,No,959,8975,0,0,959,526,1039,High Mobility,Close Combat,-,-,-,-,-,-,-,Melee Power,While "High Mobility" Melee power boosted 30%,-,-,Standard,Blade,No
 Armor Schneider [Aile Strike],Aile Strike Gundam,T,No,959,8975,0,0,959,526,1039,High Mobility,High Firepower,Serpent Bite,Phys Melee,B+,B-,-,21s,3s,-,-,-,-,Standard,Dual Saber,No
