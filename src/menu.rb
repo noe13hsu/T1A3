@@ -59,23 +59,27 @@ def weapon_category_menu(user_choice_category)
     end
 end
 
-def sorted_parts_menu(user_choice_category, filter_result)
+def sorted_parts_menu(user_choice_category, filter_result, number_of_parts_displayed)
     prompt = TTY::Prompt.new(active_color: :blue)
     case user_choice_category
     when "weapon_melee", "weapon_ranged"
-        user_choice_part = prompt.select("Please select a part") do |menu| #user_choice_part = rifle name
-            filter_result.first(5).each do |part|
+        prompt.select("Please select a part") do |menu| #user_choice_part = rifle name
+            filter_result.first(number_of_parts_displayed).each do |part|
                 menu.choice part[:weapon_name] #display top 5 rifles 
             end
         end
-        return user_choice_part
-    when "head", "body", "arm", "leg", "back", "shield", "pilot"
-        user_choice_part = prompt.select("Please select a part") do |menu| #user_choice_part = rifle name
-            filter_result.first(5).each do |part|
+    when "head", "body", "arm", "leg", "back", "shield"
+        prompt.select("Please select a part") do |menu| #user_choice_part = rifle name
+            filter_result.first(number_of_parts_displayed).each do |part|
                 menu.choice part[:name] #display top 5 rifles 
             end
         end
-        return user_choice_part
+    when "pilot"
+        prompt.select("Please select a pilot") do |menu| #user_choice_part = rifle name
+            filter_result.first(number_of_parts_displayed).each do |part|
+                menu.choice part[:name] #display top 5 rifles 
+            end
+        end
     end
 end
 
@@ -110,36 +114,33 @@ end
 
 def yes_or_no
     prompt = TTY::Prompt.new(active_color: :blue)
-    answer = prompt.select("Would you like to update your build?") do |menu|
+    prompt.select("Would you like to update your build?") do |menu|
         menu.choice "Yes"
         menu.choice "No"
     end
-    return answer
 end
 
 def recommendation_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    user_selection = prompt.select("Please select one of the followings") do |menu|
-        menu.choice "Type"
-        menu.choice "Pilot"
-        menu.choice "Word Tag"
+    prompt.select("Please select one of the followings") do |menu|
+        menu.choice "I am looking for parts with a certain type and attribute"
+        menu.choice "I am looking for a pilot with a certain job license and type"
+        menu.choice "I am looking for parts with a certain word tag and type"
     end
-    return user_selection
 end
 
 def type_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    user_selection = prompt.select("Please select a type") do |menu|
+    prompt.select("Please select a type") do |menu|
         menu.choice "S"
         menu.choice "P"
         menu.choice "T"
     end
-    return user_selection
 end
 
 def word_tag_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    user_selection = prompt.select("Please select a word tag", per_page: 8) do |menu|
+    prompt.select("Please select a word tag", per_page: 8) do |menu|
         menu.choice "Protag."
         menu.choice "Mobile Fighter"
         menu.choice "High Firepower"
@@ -149,12 +150,11 @@ def word_tag_menu
         menu.choice "Long-Range"
         menu.choice "Mid-Range"
     end
-    return user_selection
 end
 
-def pilot_menu
+def pilot_job_license_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    user_selection = prompt.select("Please select a word tag") do |menu|
+    prompt.select("Please select a word tag") do |menu|
         menu.choice "Defender"
         menu.choice "In-Fighter"
         menu.choice "Out-Fighter"
@@ -162,6 +162,5 @@ def pilot_menu
         menu.choice "Long-Shooter"
         menu.choice "Supporter"
     end
-    return user_selection
 end
 
