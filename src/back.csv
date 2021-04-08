@@ -1,7 +1,7 @@
 name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,ex_skill_name,ex_skill_type,ex_skill_pierce,ex_skill_power,ex_skill_magazine,ex_skill_cooldown,ex_skill_initial_cooldown,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source,large_scale
-Strike Freedom Gundam,S,Yes,2445,1717,3290,2654,3961,988,3155,Ace Excl.,High Mobility,HiMAT Mode,Beam Shot,A-,A,-,79s,8s,-,-,-,-,Limited,No
-Infinity Justice Gundam,T,Yes,2831,3306,2673,3290,2462,1417,2977,Close Combat,High Mobility,Fatum-01,Beam Melee,D,S,-,79s,20s,-,-,-,-,Limited,No
-Delta Plus,P,Yes,2824,944,944,2824,1919,1170,1170,Transformer,Mid-Range,-,-,-,-,-,-,-,EX Skill Effect,With Power attribute(self) Buff EX Skill effect up 15%,Vernier Consumption Reduction,When Armor is 60% or more Vernier consumption reduced 20%,Event,No
+Altered Strike Freedom Gundam,S,Yes,2445,1717,3290,2654,3961,988,3155,Ace Excl.,High Mobility,HiMAT Mode,Beam Shot,A-,A,-,79s,8s,-,-,-,-,Limited,No
+Altered Infinity Justice Gundam,T,Yes,2831,3306,2673,3290,2462,1417,2977,Close Combat,High Mobility,Fatum-01,Beam Melee,D,S,-,79s,20s,-,-,-,-,Limited,No
+Altered Delta Plus,P,Yes,2824,944,944,2824,1919,1170,1170,Transformer,Mid-Range,-,-,-,-,-,-,-,EX Skill Effect,With Power attribute(self) Buff EX Skill effect up 15%,Vernier Consumption Reduction,When Armor is 60% or more Vernier consumption reduced 20%,Event,No
 -,-,-,0,0,0,0,0,0,0,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-
-ZZ Gundam,S,Yes,3836,1717,4219,2848,3853,1432,1881,High Firepower,Gundam Type,Double Cannon & Missile Launcher,Phys Shot,D,A-,-,21s,6s,-,-,-,-,Exchange,No
-Pale Rider,T,Yes,2371,1953,2120,4007,4394,1487,1026,Federation,For Forest,-,-,-,-,-,-,-,Buff EX Skill Time,With Technique attribute(self) Buff EX Skill time up 22%,Buff EX Skill Effect,With Technique attribute(self) Buff EX Skill effect up 30%,Standard,Yes
+Altered ZZ Gundam,S,Yes,3836,1717,4219,2848,3853,1432,1881,High Firepower,Gundam Type,Double Cannon & Missile Launcher,Phys Shot,D,A-,-,21s,6s,-,-,-,-,Exchange,No
+Altered Pale Rider,T,Yes,2371,1953,2120,4007,4394,1487,1026,Federation,For Forest,-,-,-,-,-,-,-,Buff EX Skill Time,With Technique attribute(self) Buff EX Skill time up 22%,Buff EX Skill Effect,With Technique attribute(self) Buff EX Skill effect up 30%,Standard,Yes

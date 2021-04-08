@@ -1,8 +1,8 @@
 weapon_name,name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,ex_skill_name,ex_skill_type,ex_skill_pierce,ex_skill_power,ex_skill_magazine,ex_skill_cooldown,ex_skill_initial_cooldown,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source,category,large_scale
-Super Lacerta Beam Saber [SFreedom],Strike Freedom Gundam,S,Yes,3651,10113,1136,0,0,746,3034,Ace Excl.,Gundam Type,-,-,-,-,-,-,-,Enemy Melee Power Reduction,While "Ace Excl." Enemy Melee power reduced 30%,EX Skill Power,Shot DMG raised 10% EX Skill power boosted 35%,Limited,Dual Saber,No
-Super Lacerta Beam Saber [IJustice],Infinity Justice Gundam,T,Yes,1527,11428,0,0,0,1005,2829,Close Combat,High Mobility,-,-,-,-,-,-,-,Initial EX Skill Charge,Out-Fighter Job initial EX Skill charge boosted 20%,Enemy Melee Power Reduction,While "High Mobility" Enemy Melee power reduced 30%,Limited,Twin Blade,No
+Altered Super Lacerta Beam Saber [SFreedom],Altered Strike Freedom Gundam,S,Yes,3651,10113,1136,0,0,746,3034,Ace Excl.,Gundam Type,-,-,-,-,-,-,-,Enemy Melee Power Reduction,While "Ace Excl." Enemy Melee power reduced 30%,EX Skill Power,Shot DMG raised 10% EX Skill power boosted 35%,Limited,Dual Saber,No
+Altered Super Lacerta Beam Saber [IJustice],Altered Infinity Justice Gundam,T,Yes,1527,11428,0,0,0,1005,2829,Close Combat,High Mobility,-,-,-,-,-,-,-,Initial EX Skill Charge,Out-Fighter Job initial EX Skill charge boosted 20%,Enemy Melee Power Reduction,While "High Mobility" Enemy Melee power reduced 30%,Limited,Twin Blade,No
 -,-,-,-,0,0,0,0,0,0,0,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-
-Hyper Beam Saber [ZZ],ZZ Gundam,S,Yes,2846,11105,0,0,1926,494,2145,High Firepower,Gundam Type,Hyper Beam Saber,Beam Melee,D,A,-,21s,3s,-,-,-,-,Exchange,Blade,No
+Altered Hyper Beam Saber [ZZ],Altered ZZ Gundam,S,Yes,2846,11105,0,0,1926,494,2145,High Firepower,Gundam Type,Hyper Beam Saber,Beam Melee,D,A,-,21s,3s,-,-,-,-,Exchange,Blade,No
 Beam Whip [Anima (RIZE)],Gundam Anima [RIZE],S,No,953,10153,0,0,0,1029,520,Protag.,Close Combat,Beam Whip,Beam Melee,A,D,-,21s,3s,-,-,-,-,Standard,Whip,No
 Mace [T],Gundam Barbatos [4th Form],T,No,959,9186,0,0,2152,1043,526,Gundam Type,High Firepower,-,-,-,-,-,-,-,EX Skill power,Back Parts's EX Skill power boosted 30%,-,-,Standard,Lance,No
 Sanko-maru,Shin Musha Gundam [SnJ],S,No,967,9893,0,0,0,533,1050,Heavy Armor,Gundam Type,-,-,-,-,-,-,-,Enemy Melee Power Reduction,With Speed attribute(self) Enemy Melee power reduced 30%,-,-,Standard,Lance,No
@@ -36,4 +36,3 @@ Screw Whip,Crossbone Gundam x1 Kai kai,P,No,2916,8855,0,0,0,1050,532,High Mobili
 Gundam Hammer [Gundam],Gundam,P,No,1174,9211,0,0,0,1046,1046,Ace Excl.,Federation,Flexible Smash,Phys Melee,D,B+,-,21s,6s,-,-,-,-,Standard,Whip,No
 Hyper Minovsky Chohouken,Gundam Tryon 3,P,No,967,8869,0,0,0,1052,1512,Transformer,Heavy Armor,-,-,-,-,-,-,-,Initial EX Skill Charge, While "Transformer" Initial EX Skill charge boosted 20%,-,-,Standard,Blade,No
 Hyper Beam Saber [Tryon 3],Gundam Tryon 3,P,No,967,8869,0,0,0,1052,1512,Transformer,High Firepower,-,-,-,-,-,-,-,Strong Melee CRIT Rate,With Power attribute(self) Strong Melee CRIT rate boosted 30%,-,-,Standard,Blade,No
-

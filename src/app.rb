@@ -75,9 +75,9 @@ def create_user_data_table(this_user)
             ["Melee Weapon",    this_user[:weapon_melee],    "  ",   "Beam RES",   user_stats[:beam_res]], 
             ["Ranged Weapon",   this_user[:weapon_ranged],   "  ",   "Phys RES",   user_stats[:phys_res]], 
             ["Shield",          this_user[:shield],          "  ",   "", ""], 
-            ["Pilot",           this_user[:pilot],           "  ",   "Active Word Tag", word_tag_1],
-            ["Job License",     pilot_job_1,                 "  ",   "Active Word Tag", word_tag_2],
-            ["Job License",     pilot_job_2,                 "  ",   "Active Word Tag", word_tag_3]
+            ["Pilot",           this_user[:pilot],           "  ",   "Active Word Tag 1", word_tag_1],
+            ["Job License 1",   pilot_job_1,                 "  ",   "Active Word Tag 2", word_tag_2],
+            ["Job License 2",   pilot_job_2,                 "  ",   "Active Word Tag 3", word_tag_3]
         ]
     )
     puts current_build.render(:unicode, alignments: [:left, :center, :center, :left, :center], column_widths: [15, 25, 2, 15, 25])  
@@ -234,6 +234,65 @@ def display_parts_data_table(user_choice_category, user_choice_part, this_user)
     end  
 end
 
+def recommend_and_display_parts
+    user_selection = recommendation_menu
+    case user_selection
+    when "Type"
+        user_selection_type = type_menu #S
+        user_selection_attr = attribute_menu #:armor
+        display_recommendation_table(user_selection_type, user_selection_attr)
+    when "Pilot"
+        user_selection = pilot_menu
+    when "Word Tag"
+        user_selection = word_tag_menu
+    end
+end
+
+
+def display_recommendation_table(user_selection_type, user_selection_attr)
+    categories = ["head", "body", "arm", "leg", "back", "shield", "pilot", "weapon_melee", "weapon_ranged"]
+    parts_with_highest_param = {
+        head: "",
+        body: "",
+        arm: "",
+        leg: "",
+        back: "",
+        shield: "",
+        pilot: "",
+        weapon_melee: "",
+        weapon_ranged: ""
+    }
+    i = 0
+    while i < categories.length
+        parts_with_selected_type = []
+        CSV.foreach("#{categories[i]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+            if row[:type] ==  user_selection_type
+                parts_with_selected_type.push(row)
+            end
+        end
+        parts_with_selected_type.sort! { |part1, part2| part2[user_selection_attr].to_i <=> part1[user_selection_attr].to_i }
+        part_with_highest_param = parts_with_selected_type.take(1)
+        parts_with_highest_param[:"#{categories[i]}"] = part_with_highest_param[0][:name]
+        i += 1
+    end
+    parts_names = TTY::Table.new(
+        [
+            ["Type",            user_selection_type                      ],
+            ["---------------", "---------------------------------------"],
+            ["Head",            parts_with_highest_param[:head]          ],
+            ["Body",            parts_with_highest_param[:body]          ], 
+            ["Arm",             parts_with_highest_param[:arm]           ], 
+            ["Leg",             parts_with_highest_param[:leg]           ], 
+            ["Back",            parts_with_highest_param[:back]          ], 
+            ["Melee Weapon",    parts_with_highest_param[:weapon_melee]  ], 
+            ["Ranged Weapon",   parts_with_highest_param[:weapon_ranged] ], 
+            ["Shield",          parts_with_highest_param[:shield]        ],
+            ["Pilot",           parts_with_highest_param[:pilot]         ]
+        ]
+    )
+    puts parts_names.render(:unicode, multiline: true, alignments: [:left, :center], column_widths: [15, 40])
+    # p parts_with_highest_param
+end
 # ---------------------------Program---------------------------------------
 system("clear")
 
@@ -314,7 +373,7 @@ while is_signed_in
         user_choice_part, user_choice_category = sort_and_display_parts(this_user)
         build_updated = to_update_build?(user_choice_category, user_choice_part, this_user)
     when "Get a build recommendation"
-        puts "d"
+        recommend_and_display_parts
     when "Log out"
         write_to_csv(users)
         is_signed_in = false

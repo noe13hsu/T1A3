@@ -1,7 +1,7 @@
 name,type,is_altered,armor,melee_atk,shot_atk,melee_def,shot_def,beam_res,phys_res,word_tag_1,word_tag_2,ex_skill_name,ex_skill_type,ex_skill_pierce,ex_skill_power,ex_skill_magazine,ex_skill_cooldown,ex_skill_initial_cooldown,trait_1_type,trait_1_description,trait_2_type,trait_2_description,source,large_scale
-Strike Freedom Gundam,S,Yes,0,1341,10090,2095,2654,0,2259,Ace Excl.,Gundam Type,-,-,-,-,-,-,-,Shooting Power,With Dual Sabers category equipped Shooting power boosted 30%,EX Skill Power,with Twin Rifle category equipped EX Skill power boosted 35%,Limited,No
-Infinity Justice Gundam,T,Yes,2462,2652,8743,3448,1527,0,2648,Close Combat,Gundam Type,-,-,-,-,-,-,-,Enemy Shooting Power Reduction,While "Close Combat" Enemy Shooting power reduced 30%,EX Skill Power,Leg Parts's EX Skill power boosted 35%,Limited,No
-Delta Plus,P,Yes,2824,944,1919,2824,1919,634,634,Transformer,Federation,Head-Mounted Vulcan,Phys Shot,D-,D,-,19s,2s,-,-,-,-,Event,No
+Altered Strike Freedom Gundam,S,Yes,0,1341,10090,2095,2654,0,2259,Ace Excl.,Gundam Type,-,-,-,-,-,-,-,Shooting Power,With Dual Sabers category equipped Shooting power boosted 30%,EX Skill Power,with Twin Rifle category equipped EX Skill power boosted 35%,Limited,No
+Altered Infinity Justice Gundam,T,Yes,2462,2652,8743,3448,1527,0,2648,Close Combat,Gundam Type,-,-,-,-,-,-,-,Enemy Shooting Power Reduction,While "Close Combat" Enemy Shooting power reduced 30%,EX Skill Power,Leg Parts's EX Skill power boosted 35%,Limited,No
+Altered Delta Plus,P,Yes,2824,944,1919,2824,1919,634,634,Transformer,Federation,Head-Mounted Vulcan,Phys Shot,D-,D,-,19s,2s,-,-,-,-,Event,No
 -,-,-,0,0,0,0,0,0,0,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-
-ZZ Gundam,S,Yes,4210,1354,9800,2679,3473,699,1413,High Firepower,Gundam Type,Point-Blank High Mega Cannon,Beat Shot,D,S,-,79s,20s,-,-,-,-,Exchange,No
-Pale Rider,T,Yes,2359,1936,7886,3015,2682,1018,0,Federation,Mid-Range,HADES System,Awakening,-,-,-,60s,12s,-,-,-,-,Standard,Yes
+Altered ZZ Gundam,S,Yes,4210,1354,9800,2679,3473,699,1413,High Firepower,Gundam Type,Point-Blank High Mega Cannon,Beat Shot,D,S,-,79s,20s,-,-,-,-,Exchange,No
+Altered Pale Rider,T,Yes,2359,1936,7886,3015,2682,1018,0,Federation,Mid-Range,HADES System,Awakening,-,-,-,60s,12s,-,-,-,-,Standard,Yes

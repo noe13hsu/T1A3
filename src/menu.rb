@@ -116,3 +116,52 @@ def yes_or_no
     end
     return answer
 end
+
+def recommendation_menu
+    prompt = TTY::Prompt.new(active_color: :blue)
+    user_selection = prompt.select("Please select one of the followings") do |menu|
+        menu.choice "Type"
+        menu.choice "Pilot"
+        menu.choice "Word Tag"
+    end
+    return user_selection
+end
+
+def type_menu
+    prompt = TTY::Prompt.new(active_color: :blue)
+    user_selection = prompt.select("Please select a type") do |menu|
+        menu.choice "S"
+        menu.choice "P"
+        menu.choice "T"
+    end
+    return user_selection
+end
+
+def word_tag_menu
+    prompt = TTY::Prompt.new(active_color: :blue)
+    user_selection = prompt.select("Please select a word tag", per_page: 8) do |menu|
+        menu.choice "Protag."
+        menu.choice "Mobile Fighter"
+        menu.choice "High Firepower"
+        menu.choice "High Mobility"
+        menu.choice "Ace Excl."
+        menu.choice "Gundam Type"
+        menu.choice "Long-Range"
+        menu.choice "Mid-Range"
+    end
+    return user_selection
+end
+
+def pilot_menu
+    prompt = TTY::Prompt.new(active_color: :blue)
+    user_selection = prompt.select("Please select a word tag") do |menu|
+        menu.choice "Defender"
+        menu.choice "In-Fighter"
+        menu.choice "Out-Fighter"
+        menu.choice "Middle-Shooter"
+        menu.choice "Long-Shooter"
+        menu.choice "Supporter"
+    end
+    return user_selection
+end
+
