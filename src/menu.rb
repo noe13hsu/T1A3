@@ -147,7 +147,7 @@ end
 
 def word_tag_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    prompt.select("Please select a word tag", per_page: 8) do |menu|
+    prompt.select("Please select a word tag", per_page: 10) do |menu|
         menu.choice "Protag."
         menu.choice "Mobile Fighter"
         menu.choice "High Firepower"
@@ -156,6 +156,8 @@ def word_tag_menu
         menu.choice "Gundam Type"
         menu.choice "Long-Range"
         menu.choice "Mid-Range"
+        menu.choice "Mid-Range"
+        menu.choice "GM Type"
     end
 end
 

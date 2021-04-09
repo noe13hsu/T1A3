@@ -40,7 +40,7 @@ def username_registered?(username)
     return false
 end
 
-def password_validation(this_user, is_signed_in)
+def log_in(this_user, is_signed_in)
     password = ""
     input_count = 0
     input_limit = 3
@@ -74,26 +74,6 @@ end
 def request_password(message)
     print message
     return gets.chomp.downcase
-end
-
-def get_build_type(user_stats)
-    if user_stats[:type][:S] >= 5
-        return "S"
-    elsif user_stats[:type][:P] >= 5
-        return "P"
-    elsif user_stats[:type][:T] >= 5
-        return "T"
-    else
-        return "-"
-    end
-end
-
-def get_pilot_job(this_user)
-    CSV.foreach("pilot.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
-        if row[:name] == this_user[:pilot]
-            return row[:job_1], row[:job_2]
-        end
-    end
 end
 
 def color_stats(row, part_in_use, attr)
@@ -145,53 +125,66 @@ def get_active_word_tags(word_tags)
     end
 end
 
-def get_parts_with_highest_param(user_selection)
-    categories = ["head", "body", "arm", "leg", "back", "shield", "pilot", "weapon_melee", "weapon_ranged"]
-    parts_with_highest_param = {
-        head: "",
-        body: "",
-        arm: "",
-        leg: "",
-        back: "",
-        shield: "",
-        pilot: "",
-        weapon_melee: "",
-        weapon_ranged: ""
-    }
-    i = 0
-    while i < categories.length
-        filter_result = []
-        CSV.foreach("#{categories[i]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
-            if row[:type] ==  user_selection[:type]
-                filter_result.push(row)
-            end
-        end
-        filter_result.sort! { |part1, part2| part2[user_selection[:attr]].to_i <=> part1[user_selection[:attr]].to_i }
-        filter_result.delete_if { |part| part[:name] == "-"}
-        part_with_highest_param = filter_result.take(1)
-        parts_with_highest_param[:"#{categories[i]}"] = part_with_highest_param[0][:name]
-        i += 1
-    end
-    return parts_with_highest_param
-end
-
-def display_parts_with_highest_param_table(user_selection, parts_with_highest_param)
-    parts_names = TTY::Table.new(
+def create_user_data_table(this_user)
+    user_stats = user_build_stats(this_user)
+    pilot_job_1, pilot_job_2 = get_pilot_job(this_user)
+    word_tag_1, word_tag_2, word_tag_3 = get_active_word_tags(user_stats[:word_tags])
+    current_build = TTY::Table.new(
+        [   "Part",             "Name",                      "  ",   "Type",       get_build_type(user_stats)],
         [
-            ["Type",            user_selection[:type]                       ],
-            ["---------------", "----------------------------------------"],
-            ["Head",            parts_with_highest_param[:head]           ],
-            ["Body",            parts_with_highest_param[:body]           ], 
-            ["Arm",             parts_with_highest_param[:arm]            ], 
-            ["Leg",             parts_with_highest_param[:leg]            ], 
-            ["Back",            parts_with_highest_param[:back]           ], 
-            ["Melee Weapon",    parts_with_highest_param[:weapon_melee]   ], 
-            ["Ranged Weapon",   parts_with_highest_param[:weapon_ranged]  ], 
-            ["Shield",          parts_with_highest_param[:shield]         ],
-            ["Pilot",           parts_with_highest_param[:pilot]          ]
+            ["Head",            this_user[:head],            "  ",   "Armor",      user_stats[:armor]], 
+            ["Body",            this_user[:body],            "  ",   "Melee ATK",  user_stats[:melee_atk]], 
+            ["Arm",             this_user[:arm],             "  ",   "Shot ATK",   user_stats[:shot_atk]], 
+            ["Leg",             this_user[:leg],             "  ",   "Melee DEF",  user_stats[:melee_def]], 
+            ["Back",            this_user[:back],            "  ",   "Shot DEF",   user_stats[:shot_def]], 
+            ["Melee Weapon",    this_user[:weapon_melee],    "  ",   "Beam RES",   user_stats[:beam_res]], 
+            ["Ranged Weapon",   this_user[:weapon_ranged],   "  ",   "Phys RES",   user_stats[:phys_res]], 
+            ["Shield",          this_user[:shield],          "  ",   "", ""], 
+            ["Pilot",           this_user[:pilot],           "  ",   "Active Word Tag 1", word_tag_1],
+            ["Job License 1",   pilot_job_1,                 "  ",   "Active Word Tag 2", word_tag_2],
+            ["Job License 2",   pilot_job_2,                 "  ",   "Active Word Tag 3", word_tag_3]
         ]
     )
-    puts parts_names.render(:unicode, multiline: true, alignments: [:left, :center], column_widths: [15, 40])
+    puts current_build.render(:unicode, alignments: [:left, :center, :center, :left, :center], column_widths: [15, 25, 2, 15, 25])  
+end
+
+def get_build_type(user_stats)
+    if user_stats[:type][:S] >= 5
+        return "S"
+    elsif user_stats[:type][:P] >= 5
+        return "P"
+    elsif user_stats[:type][:T] >= 5
+        return "T"
+    else
+        return "-"
+    end
+end
+
+def get_pilot_job(this_user)
+    CSV.foreach("pilot.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        if row[:name] == this_user[:pilot]
+            return row[:job_1], row[:job_2]
+        end
+    end
+end
+
+def user_build_stats(this_user)
+    non_weapon_categories = ["head", "body", "arm", "leg", "back", "shield", "pilot"]
+    weapon_categories = ["weapon_melee", "weapon_ranged"]
+    user_stats = {
+        armor: 0,
+        melee_atk: 0,
+        shot_atk: 0,
+        melee_def: 0,
+        shot_def: 0,
+        beam_res: 0,
+        phys_res: 0,
+        type: {S: 0, P: 0, T: 0},
+        word_tags: []
+    }
+    sum_stats_non_weapon = sum_stats(non_weapon_categories, user_stats, this_user, :name)
+    sum_stats_all_parts = sum_stats(weapon_categories, sum_stats_non_weapon, this_user, :weapon_name)
+    return sum_stats_all_parts
 end
 
 def sum_stats(category, user_stats, this_user, ref_attr)
@@ -223,48 +216,6 @@ def sum_stats(category, user_stats, this_user, ref_attr)
     return user_stats
 end
 
-def user_build_stats(this_user)
-    non_weapon_categories = ["head", "body", "arm", "leg", "back", "shield", "pilot"]
-    weapon_categories = ["weapon_melee", "weapon_ranged"]
-    user_stats = {
-        armor: 0,
-        melee_atk: 0,
-        shot_atk: 0,
-        melee_def: 0,
-        shot_def: 0,
-        beam_res: 0,
-        phys_res: 0,
-        type: {S: 0, P: 0, T: 0},
-        word_tags: []
-    }
-    sum_stats_non_weapon = sum_stats(non_weapon_categories, user_stats, this_user, :name)
-    sum_stats_all_parts = sum_stats(weapon_categories, sum_stats_non_weapon, this_user, :weapon_name)
-    return sum_stats_all_parts
-end
-
-def create_user_data_table(this_user)
-    user_stats = user_build_stats(this_user)
-    pilot_job_1, pilot_job_2 = get_pilot_job(this_user)
-    word_tag_1, word_tag_2, word_tag_3 = get_active_word_tags(user_stats[:word_tags])
-    current_build = TTY::Table.new(
-        [   "Part",             "Name",                      "  ",   "Type",       get_build_type(user_stats)],
-        [
-            ["Head",            this_user[:head],            "  ",   "Armor",      user_stats[:armor]], 
-            ["Body",            this_user[:body],            "  ",   "Melee ATK",  user_stats[:melee_atk]], 
-            ["Arm",             this_user[:arm],             "  ",   "Shot ATK",   user_stats[:shot_atk]], 
-            ["Leg",             this_user[:leg],             "  ",   "Melee DEF",  user_stats[:melee_def]], 
-            ["Back",            this_user[:back],            "  ",   "Shot DEF",   user_stats[:shot_def]], 
-            ["Melee Weapon",    this_user[:weapon_melee],    "  ",   "Beam RES",   user_stats[:beam_res]], 
-            ["Ranged Weapon",   this_user[:weapon_ranged],   "  ",   "Phys RES",   user_stats[:phys_res]], 
-            ["Shield",          this_user[:shield],          "  ",   "", ""], 
-            ["Pilot",           this_user[:pilot],           "  ",   "Active Word Tag 1", word_tag_1],
-            ["Job License 1",   pilot_job_1,                 "  ",   "Active Word Tag 2", word_tag_2],
-            ["Job License 2",   pilot_job_2,                 "  ",   "Active Word Tag 3", word_tag_3]
-        ]
-    )
-    puts current_build.render(:unicode, alignments: [:left, :center, :center, :left, :center], column_widths: [15, 25, 2, 15, 25])  
-end
-
 def filter_and_sort_by_category(user_selection, this_user)
     filter_result = []
     case user_selection[:category]
@@ -281,8 +232,8 @@ def filter_and_sort_by_category(user_selection, this_user)
             end
         end
     end
-    filter_result.sort! { |part1, part2| part2[user_selection[:attr]].to_i <=> part1[user_selection[:attr]].to_i }
     filter_result.delete_if { |part| part[:name] == "-"}
+    filter_result.sort! { |part1, part2| part2[user_selection[:attr]].to_i <=> part1[user_selection[:attr]].to_i }
     return filter_result
 end
 
@@ -312,29 +263,19 @@ def search_parts(user_selection, this_user)
         end
     end
     if out_of_search
-        puts "You have been redirected".colorize(:red)
         return user_selection, search_result
     end
     return user_selection, search_result
 end
 
-def part_in_use(category, this_user)
-    case category
+def display_parts_data_table(user_selection, this_user)
+    part_in_use = part_in_use(user_selection[:category], this_user)
+    case user_selection[:category]
+    when "head", "body", "arm", "leg", "back", "pilot", "shield"
+        create_parts_data_table(user_selection, part_in_use, :name)
     when "weapon_melee", "weapon_ranged"
-    CSV.foreach("#{category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
-        if row[:weapon_name] == this_user[:"#{category}"]
-            return row
-        end
-    end
-    return "-"
-    when "head", "body", "arm", "leg", "back", "shield", "pilot"
-        CSV.foreach("#{category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
-            if row[:name] == this_user[:"#{category}"]
-                return row
-            end
-        end
-    return "-"
-    end
+        create_parts_data_table(user_selection, part_in_use, :weapon_name)
+    end  
 end
 
 def create_parts_data_table(user_selection, part_in_use, attr)
@@ -374,17 +315,75 @@ def create_parts_data_table(user_selection, part_in_use, attr)
     end
 end
 
-def display_parts_data_table(user_selection, this_user)
-    part_in_use = part_in_use(user_selection[:category], this_user)
-    case user_selection[:category]
-    when "head", "body", "arm", "leg", "back", "pilot", "shield"
-        create_parts_data_table(user_selection, part_in_use, :name)
+def part_in_use(category, this_user)
+    case category
     when "weapon_melee", "weapon_ranged"
-        create_parts_data_table(user_selection, part_in_use, :weapon_name)
-    end  
+    CSV.foreach("#{category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        if row[:weapon_name] == this_user[:"#{category}"]
+            return row
+        end
+    end
+    return "-"
+    when "head", "body", "arm", "leg", "back", "shield", "pilot"
+        CSV.foreach("#{category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+            if row[:name] == this_user[:"#{category}"]
+                return row
+            end
+        end
+    return "-"
+    end
 end
 
-def filter_and_sort_pilots(user_selection, this_user)
+def get_parts_with_highest_param(user_selection)
+    categories = ["head", "body", "arm", "leg", "back", "shield", "pilot", "weapon_melee", "weapon_ranged"]
+    parts_with_highest_param = {
+        head: "",
+        body: "",
+        arm: "",
+        leg: "",
+        back: "",
+        shield: "",
+        pilot: "",
+        weapon_melee: "",
+        weapon_ranged: ""
+    }
+    i = 0
+    while i < categories.length
+        filter_result = []
+        CSV.foreach("#{categories[i]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+            if row[:type] ==  user_selection[:type]
+                filter_result.push(row)
+            end
+        end
+        filter_result.delete_if { |part| part[:name] == "-"}
+        filter_result.sort! { |part1, part2| part2[user_selection[:attr]].to_i <=> part1[user_selection[:attr]].to_i }
+        part_with_highest_param = filter_result.take(1)
+        parts_with_highest_param[:"#{categories[i]}"] = part_with_highest_param[0][:name]
+        i += 1
+    end
+    return parts_with_highest_param
+end
+
+def display_parts_with_highest_param_table(user_selection, parts_with_highest_param)
+    parts_names = TTY::Table.new(
+        [
+            ["Type",            user_selection[:type]                       ],
+            ["---------------", "----------------------------------------"],
+            ["Head",            parts_with_highest_param[:head]           ],
+            ["Body",            parts_with_highest_param[:body]           ], 
+            ["Arm",             parts_with_highest_param[:arm]            ], 
+            ["Leg",             parts_with_highest_param[:leg]            ], 
+            ["Back",            parts_with_highest_param[:back]           ], 
+            ["Melee Weapon",    parts_with_highest_param[:weapon_melee]   ], 
+            ["Ranged Weapon",   parts_with_highest_param[:weapon_ranged]  ], 
+            ["Shield",          parts_with_highest_param[:shield]         ],
+            ["Pilot",           parts_with_highest_param[:pilot]          ]
+        ]
+    )
+    puts parts_names.render(:unicode, multiline: true, alignments: [:left, :center], column_widths: [15, 40])
+end
+
+def filter_and_sort_pilots(user_selection)
     filter_result = []
     CSV.foreach("pilot.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
         if row[:job_1] == user_selection[:job_license] and row[:type] == user_selection[:type]
@@ -394,11 +393,10 @@ def filter_and_sort_pilots(user_selection, this_user)
         end
     end
     filter_result.sort! { |part1, part2| part2[user_selection[:attr]].to_i <=> part1[user_selection[:attr]].to_i }
-    filter_result.delete_if { |part| part[:name] == "-" }
     return filter_result
 end
 
-def filter_and_sort_word_tags(user_selection, this_user)
+def filter_and_sort_word_tags(user_selection)
     filter_result = []
     case user_selection[:category]
     when "head", "body", "arm", "leg", "back", "pilot", "shield"
