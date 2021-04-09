@@ -40,9 +40,30 @@ def username_registered?(username)
     return false
 end
 
-def request_part_name(message)
-    print message
-    return gets.chomp.downcase.split(/\s+/).each{ |word| word.capitalize! }.join(' ')
+def password_validation(this_user, is_signed_in)
+    password = ""
+    input_count = 0
+    input_limit = 3
+    out_of_input = false
+    while password != this_user[:password] and !out_of_input
+        if input_count == 0 
+            password = request_password("Please enter your password: ")
+            input_count += 1
+        elsif input_count > 0 and input_count < input_limit
+            puts ("Invalid password").colorize(:red)
+            password = request_password("Please enter your password: ")
+            input_count += 1
+        else
+            out_of_input = true
+        end
+    end
+    if out_of_input
+        puts "Invalid password\nPlease check your password".colorize(:red)
+    else
+        puts "Successful login".colorize(:blue)
+        is_signed_in = true
+    end
+    return is_signed_in
 end
 
 def request_username(message)
@@ -85,23 +106,18 @@ def color_stats(row, part_in_use, attr)
     end    
 end 
 
-def reset_build(users, this_user)
-    users.each do |user|
-        if user[:username] == this_user[:username]
-            i = 2
-            while i < user.length do
-                user[i] = "-"
-                i += 1
-            end
-        end
+def reset_build(this_user)
+    i = 2
+    while i < this_user.length do
+        this_user[i] = "-"
+        i += 1
     end
 end
 
-def to_update_build?(user_selection_category, user_selection_part, this_user)
-    answer = yes_or_no
-    case answer
+def to_update_build?(user_selection, this_user)
+    case yes_or_no
     when "Yes"
-        this_user[:"#{user_selection_category}"] = user_selection_part
+        this_user[:"#{user_selection[:category]}"] = user_selection[:part]
         puts "Build updated".colorize(:blue)
     when "No"
         puts "Build not updated".colorize(:red)
@@ -129,7 +145,7 @@ def get_active_word_tags(word_tags)
     end
 end
 
-def display_recommendation_by_type_table(user_selection_type, user_selection_attr)
+def get_parts_with_highest_param(user_selection)
     categories = ["head", "body", "arm", "leg", "back", "shield", "pilot", "weapon_melee", "weapon_ranged"]
     parts_with_highest_param = {
         head: "",
@@ -144,20 +160,25 @@ def display_recommendation_by_type_table(user_selection_type, user_selection_att
     }
     i = 0
     while i < categories.length
-        parts_with_selected_type = []
+        filter_result = []
         CSV.foreach("#{categories[i]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
-            if row[:type] ==  user_selection_type
-                parts_with_selected_type.push(row)
+            if row[:type] ==  user_selection[:type]
+                filter_result.push(row)
             end
         end
-        parts_with_selected_type.sort! { |part1, part2| part2[user_selection_attr].to_i <=> part1[user_selection_attr].to_i }
-        part_with_highest_param = parts_with_selected_type.take(1)
+        filter_result.sort! { |part1, part2| part2[user_selection[:attr]].to_i <=> part1[user_selection[:attr]].to_i }
+        filter_result.delete_if { |part| part[:name] == "-"}
+        part_with_highest_param = filter_result.take(1)
         parts_with_highest_param[:"#{categories[i]}"] = part_with_highest_param[0][:name]
         i += 1
     end
+    return parts_with_highest_param
+end
+
+def display_parts_with_highest_param_table(user_selection, parts_with_highest_param)
     parts_names = TTY::Table.new(
         [
-            ["Type",            user_selection_type                       ],
+            ["Type",            user_selection[:type]                       ],
             ["---------------", "----------------------------------------"],
             ["Head",            parts_with_highest_param[:head]           ],
             ["Body",            parts_with_highest_param[:body]           ], 
@@ -171,7 +192,6 @@ def display_recommendation_by_type_table(user_selection_type, user_selection_att
         ]
     )
     puts parts_names.render(:unicode, multiline: true, alignments: [:left, :center], column_widths: [15, 40])
-    # p parts_with_highest_param
 end
 
 def sum_stats(category, user_stats, this_user, ref_attr)
@@ -224,8 +244,6 @@ end
 
 def create_user_data_table(this_user)
     user_stats = user_build_stats(this_user)
-    # p this_user
-    # get_pilot_job(this_user)
     pilot_job_1, pilot_job_2 = get_pilot_job(this_user)
     word_tag_1, word_tag_2, word_tag_3 = get_active_word_tags(user_stats[:word_tags])
     current_build = TTY::Table.new(
@@ -247,50 +265,39 @@ def create_user_data_table(this_user)
     puts current_build.render(:unicode, alignments: [:left, :center, :center, :left, :center], column_widths: [15, 25, 2, 15, 25])  
 end
 
-def load_parts(user_selection_category, user_selection_weapon)
-    all_parts = []
-    case user_selection_category
+def filter_and_sort_by_category(user_selection, this_user)
+    filter_result = []
+    case user_selection[:category]
     when "head", "body", "arm", "leg", "back", "shield", "pilot"
-        CSV.foreach("#{user_selection_category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        CSV.foreach("#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
             headers ||= row.headers
-            all_parts << row
+            filter_result.push(row)
         end
-        return all_parts
     when "weapon_melee", "weapon_ranged"
-        CSV.foreach("#{user_selection_category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        CSV.foreach("#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
             headers ||= row.headers
-            if row[:category] == user_selection_weapon
-                all_parts << row
+            if row[:category] == user_selection[:weapon_type]
+                filter_result.push(row)
             end
         end
-        return all_parts
     end
+    filter_result.sort! { |part1, part2| part2[user_selection[:attr]].to_i <=> part1[user_selection[:attr]].to_i }
+    filter_result.delete_if { |part| part[:name] == "-"}
+    return filter_result
 end
 
-def sort_and_display_parts(this_user)
-    filter_result = []
-    user_selection_category = category_menu.downcase #weapon_ranged
-    user_selection_weapon =  weapon_category_menu(user_selection_category) #rifle
-    filter_result = load_parts(user_selection_category, user_selection_weapon) # array of all rifles
-    user_selection_attr = attribute_menu #shot atk
-    filter_result.sort! { |part1, part2| part2[user_selection_attr].to_i <=> part1[user_selection_attr].to_i } #sort all rifles by highest shot atk
-    user_selection_part = sorted_parts_menu(user_selection_category, filter_result, 3)
-    display_parts_data_table(user_selection_category, user_selection_part, this_user) #(weapon_ranged, rifle name, this_user)
-    return user_selection_part, user_selection_category
-end
-
-def search_and_display_parts(this_user)
+def search_parts(user_selection, this_user)
     search_result = []
     search_count = 0
     search_limit = 5
     out_of_search = false
-    user_selection_category = category_menu.downcase #melee weapon
     while search_result.length == 0 and !out_of_search
         if search_count < search_limit
-            user_selection_part = request_part_name("Please enter a Gundam name: ")
-            CSV.foreach("#{user_selection_category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+            print "Please enter a Gundam name: " 
+            user_selection[:part] = gets.chomp.downcase.split(/\s+/).each{ |word| word.capitalize! }.join(' ')
+            CSV.foreach("#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
                 headers ||= row.headers
-                if row[:name] == user_selection_part
+                if row[:name] == user_selection[:part]
                     search_result.push(row)
                 end
             end
@@ -306,39 +313,23 @@ def search_and_display_parts(this_user)
     end
     if out_of_search
         puts "You have been redirected".colorize(:red)
-        return user_selection_part, user_selection_category, false
+        return user_selection, search_result
     end
-    prompt = TTY::Prompt.new(active_color: :blue)
-    case user_selection_category
-    when "weapon_melee", "weapon_ranged"
-        user_selection_part = prompt.select("Please select a part") do |menu|
-        search_result.each do |part|
-            menu.choice part[:weapon_name]
-        end
-    end
-    when "head", "body", "arm", "leg", "back", "shield", "pilot"
-        user_selection_part = prompt.select("Please select a part") do |menu|
-            search_result.each do |part|
-                menu.choice part[:name]
-            end
-        end
-    end
-    is_table_created = display_parts_data_table(user_selection_category, user_selection_part, this_user)
-    return user_selection_part, user_selection_category, is_table_created
+    return user_selection, search_result
 end
 
-def part_in_use(user_selection_category, this_user)
-    case user_selection_category
+def part_in_use(category, this_user)
+    case category
     when "weapon_melee", "weapon_ranged"
-    CSV.foreach("#{user_selection_category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
-        if row[:weapon_name] == this_user[:"#{user_selection_category}"]
+    CSV.foreach("#{category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        if row[:weapon_name] == this_user[:"#{category}"]
             return row
         end
     end
     return "-"
     when "head", "body", "arm", "leg", "back", "shield", "pilot"
-        CSV.foreach("#{user_selection_category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
-            if row[:name] == this_user[:"#{user_selection_category}"]
+        CSV.foreach("#{category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+            if row[:name] == this_user[:"#{category}"]
                 return row
             end
         end
@@ -346,9 +337,9 @@ def part_in_use(user_selection_category, this_user)
     end
 end
 
-def create_parts_data_table(user_selection_category, user_selection_part, part_in_use, attr)
-    CSV.foreach("#{user_selection_category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
-        if row[attr] == user_selection_part
+def create_parts_data_table(user_selection, part_in_use, attr)
+    CSV.foreach("#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        if row[attr] == user_selection[:part]
             part_details = TTY::Table.new(
                 [
                     ["Name",            part_in_use[:name],                         "==>",      row[:name]],
@@ -379,21 +370,54 @@ def create_parts_data_table(user_selection_category, user_selection_part, part_i
                 ]
             )
             puts part_details.render(:unicode, multiline: true, alignments: [:left, :center, :center, :center], column_widths: [14, 25, 5, 25])
-            return true
         end
     end
-    puts "Invalid name".colorize(:red)
-    return false
 end
 
-def display_parts_data_table(user_selection_category, user_selection_part, this_user)
-    part_in_use = part_in_use(user_selection_category, this_user)
-    case user_selection_category
+def display_parts_data_table(user_selection, this_user)
+    part_in_use = part_in_use(user_selection[:category], this_user)
+    case user_selection[:category]
     when "head", "body", "arm", "leg", "back", "pilot", "shield"
-        is_table_created = create_parts_data_table(user_selection_category, user_selection_part, part_in_use, :name)
-        return is_table_created
+        create_parts_data_table(user_selection, part_in_use, :name)
     when "weapon_melee", "weapon_ranged"
-        is_table_created = create_parts_data_table(user_selection_category, user_selection_part, part_in_use, :weapon_name)
-        return is_table_created
+        create_parts_data_table(user_selection, part_in_use, :weapon_name)
     end  
+end
+
+def filter_and_sort_pilots(user_selection, this_user)
+    filter_result = []
+    CSV.foreach("pilot.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        if row[:job_1] == user_selection[:job_license] and row[:type] == user_selection[:type]
+            filter_result.push(row)
+        elsif row[:job_2] == user_selection[:job_license] and row[:type] == user_selection[:type]
+            filter_result.push(row)
+        end
+    end
+    filter_result.sort! { |part1, part2| part2[user_selection[:attr]].to_i <=> part1[user_selection[:attr]].to_i }
+    filter_result.delete_if { |part| part[:name] == "-" }
+    return filter_result
+end
+
+def filter_and_sort_word_tags(user_selection, this_user)
+    filter_result = []
+    case user_selection[:category]
+    when "head", "body", "arm", "leg", "back", "pilot", "shield"
+        CSV.foreach("#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+            if row[:word_tag_1] ==  user_selection[:word_tag] and row[:type] ==  user_selection[:type]
+                filter_result.push(row)
+            elsif row[:word_tag_2] ==  user_selection[:word_tag] and row[:type] ==  user_selection[:type]
+                filter_result.push(row)
+            end
+        end
+    when "weapon_melee", "weapon_ranged"
+        CSV.foreach("#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+            if row[:word_tag_1] ==  user_selection[:word_tag] and row[:type] == user_selection[:type] and row[:category] == user_selection[:weapon_type]
+                filter_result.push(row)
+            elsif row[:word_tag_2] ==  user_selection[:word_tag] and row[:type] == user_selection[:type] and row[:category] == user_selection[:weapon_type]
+                filter_result.push(row)
+            end
+        end
+    end
+    filter_result.sort! { |part1, part2| part2[user_selection[:attr]].to_i <=> part1[user_selection[:attr]].to_i }
+    return filter_result
 end

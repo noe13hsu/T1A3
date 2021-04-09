@@ -21,22 +21,29 @@ end
 
 def category_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    prompt.select("Please select a category", per_page: 9) do |menu|
-        menu.choice "Head"
-        menu.choice "Body"
-        menu.choice "Arm"
-        menu.choice "Leg"
-        menu.choice "Back"
-        menu.choice "Weapon_Melee"
-        menu.choice "Weapon_Ranged"
-        menu.choice "Shield"
-        menu.choice "Pilot"
+    user_selection = prompt.select("Please select a category", per_page: 9) do |menu|
+            menu.choice "Head"
+            menu.choice "Body"
+            menu.choice "Arm"
+            menu.choice "Leg"
+            menu.choice "Back"
+            menu.choice "Melee Weapon"
+            menu.choice "Ranged Weapon"
+            menu.choice "Shield"
+            menu.choice "Pilot"
+        end
+    case user_selection
+    when "Melee Weapon"
+        user_selection = "Weapon_Melee"
+    when "Ranged Weapon"
+        user_selection = "Weapon_Ranged"
     end
+    return user_selection.downcase
 end
 
-def weapon_category_menu(user_choice_category)
+def weapon_category_menu(category)
     prompt = TTY::Prompt.new(active_color: :blue)
-    case user_choice_category
+    case category
     when "weapon_ranged"
         prompt.select("Please select a weapon category", per_page: 6) do |menu|
             menu.choice "Bazooka"
@@ -59,9 +66,9 @@ def weapon_category_menu(user_choice_category)
     end
 end
 
-def sorted_parts_menu(user_choice_category, filter_result, number_of_parts_displayed)
+def sorted_parts_menu(user_selection_category, filter_result, number_of_parts_displayed)
     prompt = TTY::Prompt.new(active_color: :blue)
-    case user_choice_category
+    case user_selection_category
     when "weapon_melee", "weapon_ranged"
         prompt.select("Please select a part") do |menu| #user_choice_part = rifle name
             filter_result.first(number_of_parts_displayed).each do |part|
