@@ -21,7 +21,7 @@ end
 
 def category_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    user_selection = prompt.select("Please select a category", per_page: 9) do |menu|
+    user_selection = prompt.select("Please select a category for filtering", per_page: 9) do |menu|
             menu.choice "Head"
             menu.choice "Body"
             menu.choice "Arm"
@@ -45,7 +45,7 @@ def weapon_category_menu(category)
     prompt = TTY::Prompt.new(active_color: :blue)
     case category
     when "weapon_ranged"
-        prompt.select("Please select a weapon category", per_page: 6) do |menu|
+        prompt.select("Please select a weapon category for filtering", per_page: 6) do |menu|
             menu.choice "Bazooka"
             menu.choice "Gatling Gun"
             menu.choice "Long Rifle"
@@ -54,7 +54,7 @@ def weapon_category_menu(category)
             menu.choice "Twin Rifle"
         end
     when "weapon_melee"
-        prompt.select("Please select a weapon category", per_page: 8) do |menu|
+        prompt.select("Please select a weapon category for filtering", per_page: 8) do |menu|
             menu.choice "Axe"
             menu.choice "Blade"
             menu.choice "Dual Saber"
@@ -92,7 +92,7 @@ end
 
 def attribute_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    user_selection = prompt.select("Please select an attribute", per_page: 7) do |menu|
+    user_selection = prompt.select("Please select an attribute for sorting", per_page: 7) do |menu|
         menu.choice "Armor"
         menu.choice "Melee Attack"
         menu.choice "Shot Attack"
@@ -138,7 +138,7 @@ end
 
 def type_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    prompt.select("Please select a type") do |menu|
+    prompt.select("Please select a type for filtering") do |menu|
         menu.choice "S"
         menu.choice "P"
         menu.choice "T"
@@ -147,7 +147,7 @@ end
 
 def word_tag_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    prompt.select("Please select a word tag", per_page: 10) do |menu|
+    prompt.select("Please select a word tag for filtering ", per_page: 10) do |menu|
         menu.choice "Protag."
         menu.choice "Mobile Fighter"
         menu.choice "High Firepower"
@@ -163,7 +163,7 @@ end
 
 def pilot_job_license_menu
     prompt = TTY::Prompt.new(active_color: :blue)
-    prompt.select("Please select a word tag") do |menu|
+    prompt.select("Please select a job license for filtering") do |menu|
         menu.choice "Defender"
         menu.choice "In-Fighter"
         menu.choice "Out-Fighter"

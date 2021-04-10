@@ -14,18 +14,41 @@ Gundam Breaker Mobile provides a large number of collectible parts with differen
 Gundam Breaker Mobile now has a Japanese version and a global version which includes language options of English, Chinese, and Korean. GBM Helper will first look to assist users who are playing the English version until the app supports other language options. Users will be able to log into the GBM Helper to view their current build, if there is a part that they know will imporve their build, they can use the search feature to search for the part and update their build. Otherwise, they can take advantage of the filter/sort feature and recommendation feature to find ideas on how to improve their build, and they will be able to overwrite their existing build.
 
 ## Installation
+If you haven't installed Ruby
+
+[https://www.ruby-lang.org/en/documentation/installation/](https://www.ruby-lang.org/en/documentation/installation/)
+
 To clone the project
 ```
 git clone https://github.com/noe13hsu/T1A3---GBM-Helper.git
 ```
-Inside terminal to install gem bundle
+**Inside your terminal to install the required gems**
+
+if you don't have the bundler gem
 ```
+gem install bundler
 bundle install
 ```
 or
 ```
 ./install.sh
 ```
+if you have already installed the bundler gem
+```
+bundle install
+```
+
+## Usage
+**Inside your terminal to run GBM Helper**
+
+```
+ruby app.rb
+```
+or
+```
+./execute.sh
+```
+Please note if you run GBM Helper with ./execute.sh in Windows, it is possible that the arrow keys won't work....
 
 ## Referenced sources
 * Parts' names in English - [Dengeki Wiki](https://g-b-en.ggame.jp/wiki/)

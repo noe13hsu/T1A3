@@ -31,7 +31,7 @@ while !is_signed_in and !has_quit
         username = request_input("Please enter a username: ")
         is_username_validated = username_validation(users, username)
         while !is_username_validated
-            puts "Invalid username\nPlease enter at least 6 characters and 1 letter".colorize(:red)
+            puts "Invalid username or registered username\nPlease enter minimum 6 characters with at least 1 letter".colorize(:red)
             username = request_input("Please enter a different username: ")
             is_username_validated = username_validation(users, username)
         end
@@ -50,7 +50,7 @@ while !is_signed_in and !has_quit
         is_signed_in = true
 # ----------------------------Log in---------------------------------------
     when "Log in"
-        username = request_username("Please enter your username: ")
+        username = request_input("Please enter your username: ")
         this_user = load_user_details(users, username)
         begin
             is_signed_in = log_in(this_user, is_signed_in)

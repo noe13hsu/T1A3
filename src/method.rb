@@ -67,11 +67,11 @@ def log_in(this_user, is_signed_in)
     out_of_input = false
     while password != this_user[:password] and !out_of_input
         if input_count == 0 
-            password = request_password("Please enter your password: ")
+            password = request_input("Please enter your password: ")
             input_count += 1
         elsif input_count > 0 and input_count < input_limit
             puts ("Invalid password").colorize(:red)
-            password = request_password("Please enter your password: ")
+            password = request_input("Please enter your password: ")
             input_count += 1
         else
             out_of_input = true
@@ -176,7 +176,7 @@ def get_build_type(user_stats)
 end
 
 def get_pilot_job(this_user)
-    CSV.foreach("pilot.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+    CSV.foreach("./parts/pilot.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
         if row[:name] == this_user[:pilot]
             return row[:job_1], row[:job_2]
         end
@@ -205,7 +205,7 @@ end
 def sum_stats(category, user_stats, this_user, ref_attr)
     i = 0
     while i < category.length do
-        CSV.foreach("#{category[i]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        CSV.foreach("./parts/#{category[i]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
             if row[ref_attr] == this_user[:"#{category[i]}"]
                 user_stats[:armor] += row[:armor].to_i
                 user_stats[:melee_atk] += row[:melee_atk].to_i
@@ -235,12 +235,12 @@ def filter_and_sort_by_category(user_selection, this_user)
     filter_result = []
     case user_selection[:category]
     when "head", "body", "arm", "leg", "back", "shield", "pilot"
-        CSV.foreach("#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        CSV.foreach("./parts/#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
             headers ||= row.headers
             filter_result.push(row)
         end
     when "weapon_melee", "weapon_ranged"
-        CSV.foreach("#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        CSV.foreach("./parts/#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
             headers ||= row.headers
             if row[:category] == user_selection[:weapon_type]
                 filter_result.push(row)
@@ -261,7 +261,7 @@ def search_parts(user_selection, this_user)
         if search_count < search_limit
             print "Please enter a Gundam name: " 
             user_selection[:part] = gets.chomp.downcase.split(/\s+/).each{ |word| word.capitalize! }.join(' ')
-            CSV.foreach("#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+            CSV.foreach("./parts/#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
                 headers ||= row.headers
                 if row[:name] == user_selection[:part]
                     search_result.push(row)
@@ -294,7 +294,7 @@ def display_parts_data_table(user_selection, this_user)
 end
 
 def create_parts_data_table(user_selection, part_in_use, attr)
-    CSV.foreach("#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+    CSV.foreach("./parts/#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
         if row[attr] == user_selection[:part]
             part_details = TTY::Table.new(
                 [
@@ -333,14 +333,14 @@ end
 def part_in_use(category, this_user)
     case category
     when "weapon_melee", "weapon_ranged"
-    CSV.foreach("#{category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+    CSV.foreach("./parts/#{category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
         if row[:weapon_name] == this_user[:"#{category}"]
             return row
         end
     end
     return "-"
     when "head", "body", "arm", "leg", "back", "shield", "pilot"
-        CSV.foreach("#{category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        CSV.foreach("./parts/#{category}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
             if row[:name] == this_user[:"#{category}"]
                 return row
             end
@@ -365,7 +365,7 @@ def get_parts_with_highest_param(user_selection)
     i = 0
     while i < categories.length
         filter_result = []
-        CSV.foreach("#{categories[i]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        CSV.foreach("./parts/#{categories[i]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
             if row[:type] ==  user_selection[:type]
                 filter_result.push(row)
             end
@@ -400,7 +400,7 @@ end
 
 def filter_and_sort_pilots(user_selection)
     filter_result = []
-    CSV.foreach("pilot.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+    CSV.foreach("./parts/pilot.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
         if row[:job_1] == user_selection[:job_license] and row[:type] == user_selection[:type]
             filter_result.push(row)
         elsif row[:job_2] == user_selection[:job_license] and row[:type] == user_selection[:type]
@@ -415,7 +415,7 @@ def filter_and_sort_word_tags(user_selection)
     filter_result = []
     case user_selection[:category]
     when "head", "body", "arm", "leg", "back", "pilot", "shield"
-        CSV.foreach("#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        CSV.foreach("./parts/#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
             if row[:word_tag_1] ==  user_selection[:word_tag] and row[:type] ==  user_selection[:type]
                 filter_result.push(row)
             elsif row[:word_tag_2] ==  user_selection[:word_tag] and row[:type] ==  user_selection[:type]
@@ -423,7 +423,7 @@ def filter_and_sort_word_tags(user_selection)
             end
         end
     when "weapon_melee", "weapon_ranged"
-        CSV.foreach("#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
+        CSV.foreach("./parts/#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
             if row[:word_tag_1] ==  user_selection[:word_tag] and row[:type] == user_selection[:type] and row[:category] == user_selection[:weapon_type]
                 filter_result.push(row)
             elsif row[:word_tag_2] ==  user_selection[:word_tag] and row[:type] == user_selection[:type] and row[:category] == user_selection[:weapon_type]
