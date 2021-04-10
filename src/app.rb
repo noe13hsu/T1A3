@@ -109,16 +109,16 @@ while is_signed_in
 # ----------------------------Recommendation-------------------------------
     when "Get a build recommendation"
         case recommendation_menu
-        when "I am looking for parts with a certain type and attribute"
+        when "I am looking for parts with the highest attribute and a certain type"
             user_selection = {
                 type: "",
                 attr: ""
             }
             user_selection[:type] = type_menu
             user_selection[:attr] = attribute_menu
-            parts_with_highest_param = (user_selection)
+            parts_with_highest_param = get_parts_with_highest_param(user_selection)
             display_parts_with_highest_param_table(user_selection, parts_with_highest_param)
-        when "I am looking for a pilot with a certain job license and type"
+        when "I am looking for pilots with a certain job license and type"
             user_selection = {
                 category: "pilot",
                 job_license: "",

@@ -130,8 +130,8 @@ end
 def recommendation_menu
     prompt = TTY::Prompt.new(active_color: :blue)
     prompt.select("Please select one of the followings") do |menu|
-        menu.choice "I am looking for parts with a certain type and attribute"
-        menu.choice "I am looking for a pilot with a certain job license and type"
+        menu.choice "I am looking for parts with the highest attribute and a certain type"
+        menu.choice "I am looking for pilots with a certain job license and type"
         menu.choice "I am looking for parts with a certain word tag and type"
     end
 end
