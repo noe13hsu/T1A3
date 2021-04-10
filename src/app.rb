@@ -79,7 +79,7 @@ while is_signed_in
             part: ""
         }
         user_selection[:category] = category_menu
-        user_selection, search_result = search_parts(user_selection, this_user)
+        user_selection, search_result = search_parts(user_selection)
         begin
             user_selection[:part] = sorted_parts_menu(user_selection[:category], search_result, 1)
             display_parts_data_table(user_selection, this_user)
@@ -98,7 +98,7 @@ while is_signed_in
         user_selection[:category] = category_menu
         user_selection[:weapon_type] =  weapon_category_menu(user_selection[:category])
         user_selection[:attr] = attribute_menu
-        sort_result = filter_and_sort_by_category(user_selection, this_user)
+        sort_result = filter_and_sort_by_category(user_selection)
         begin
             user_selection[:part] = sorted_parts_menu(user_selection[:category], sort_result, sort_result.length)
             display_parts_data_table(user_selection, this_user)

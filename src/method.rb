@@ -231,7 +231,7 @@ def sum_stats(category, user_stats, this_user, ref_attr)
     return user_stats
 end
 
-def filter_and_sort_by_category(user_selection, this_user)
+def filter_and_sort_by_category(user_selection)
     filter_result = []
     case user_selection[:category]
     when "head", "body", "arm", "leg", "back", "shield", "pilot"
@@ -252,7 +252,7 @@ def filter_and_sort_by_category(user_selection, this_user)
     return filter_result
 end
 
-def search_parts(user_selection, this_user)
+def search_parts(user_selection)
     search_result = []
     search_count = 0
     search_limit = 5

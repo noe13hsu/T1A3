@@ -56,3 +56,6 @@ Please note if you run GBM Helper with ./execute.sh in Windows, it is possible t
 
 ## GitHub link
 [https://github.com/noe13hsu/T1A3---GBM-Helper](https://github.com/noe13hsu/T1A3---GBM-Helper)
+
+## Trello board link
+[https://trello.com/b/qXOb5Gb3/gbm-helper](https://trello.com/b/qXOb5Gb3/gbm-helper)
