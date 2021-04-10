@@ -22,6 +22,10 @@ Inside terminal to install gem bundle
 ```
 bundle install
 ```
+or
+```
+./install.sh
+```
 
 ## Referenced sources
 * Parts' names in English - [Dengeki Wiki](https://g-b-en.ggame.jp/wiki/)
