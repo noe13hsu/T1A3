@@ -70,7 +70,7 @@ def sorted_parts_menu(user_selection_category, filter_result, number_of_parts_di
     prompt = TTY::Prompt.new(active_color: :blue)
     case user_selection_category
     when "weapon_melee", "weapon_ranged"
-        prompt.select("Please select a part") do |menu| #user_choice_part = rifle name
+        prompt.select("Please select a weapon") do |menu| #user_choice_part = rifle name
             filter_result.first(number_of_parts_displayed).each do |part|
                 menu.choice part[:weapon_name] #display top 5 rifles 
             end

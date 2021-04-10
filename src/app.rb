@@ -116,7 +116,7 @@ while is_signed_in
             }
             user_selection[:type] = type_menu
             user_selection[:attr] = attribute_menu
-            parts_with_highest_param = get_parts_with_highest_param(user_selection)
+            parts_with_highest_param = (user_selection)
             display_parts_with_highest_param_table(user_selection, parts_with_highest_param)
         when "I am looking for a pilot with a certain job license and type"
             user_selection = {
@@ -163,7 +163,8 @@ while is_signed_in
 # ----------------------------Log out--------------------------------------
     when "Log out"
         write_to_csv(users)
-        is_signed_in = false
         colorizer.write "Thank you for using GBM Helper"
+        is_signed_in = false
+        has_quit = true
     end
 end
