@@ -31,13 +31,33 @@ def load_user_details(all_users, username)
     end
 end
 
-def username_registered?(username)
-    CSV.foreach("user.csv", "a+", headers: true, header_converters: :symbol) do |row|
-        if row[:username] == username
+def username_registered?(users, username)
+    users.each do |user|
+        if user[:username] == username
             return true
         end
     end
     return false
+end
+
+def username_validation(users, username)
+    required_format = /\A\p{Alnum}*\p{L}\p{Alnum}*\z/
+    required_length = 6
+    is_username_registered = username_registered?(users, username)
+    if username.chars.length >= required_length and username.match?(required_format) == true and is_username_registered == false
+        return true
+    else
+        return false
+    end  
+end
+
+def password_validation(password)
+    required_length = 6
+    if password.chars.length >= required_length
+        return true
+    else
+        return false
+    end
 end
 
 def log_in(this_user, is_signed_in)
@@ -66,12 +86,7 @@ def log_in(this_user, is_signed_in)
     return is_signed_in
 end
 
-def request_username(message)
-    print message
-    return gets.chomp.downcase
-end
-
-def request_password(message)
+def request_input(message)
     print message
     return gets.chomp.downcase
 end
@@ -140,9 +155,9 @@ def create_user_data_table(this_user)
             ["Melee Weapon",    this_user[:weapon_melee],    "  ",   "Beam RES",   user_stats[:beam_res]], 
             ["Ranged Weapon",   this_user[:weapon_ranged],   "  ",   "Phys RES",   user_stats[:phys_res]], 
             ["Shield",          this_user[:shield],          "  ",   "", ""], 
-            ["Pilot",           this_user[:pilot],           "  ",   "Active Word Tag 1", word_tag_1],
-            ["Job License 1",   pilot_job_1,                 "  ",   "Active Word Tag 2", word_tag_2],
-            ["Job License 2",   pilot_job_2,                 "  ",   "Active Word Tag 3", word_tag_3]
+            ["Pilot",           this_user[:pilot],           "  ",   "Word Tag 1", word_tag_1],
+            ["Job License 1",   pilot_job_1,                 "  ",   "Word Tag 2", word_tag_2],
+            ["Job License 2",   pilot_job_2,                 "  ",   "Word Tag 3", word_tag_3]
         ]
     )
     puts current_build.render(:unicode, alignments: [:left, :center, :center, :left, :center], column_widths: [15, 25, 2, 15, 25])  

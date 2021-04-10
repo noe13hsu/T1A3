@@ -5,6 +5,7 @@ require "colorize"
 require "ruby_figlet"
 require "lolize"
 
+require_relative "argv"
 require_relative "method"
 require_relative "menu"
 using RubyFiglet
@@ -27,13 +28,20 @@ while !is_signed_in and !has_quit
     case title_menu
 # ---------------------------Sign-up---------------------------------------
     when "Sign up"
-        username = request_username("Please enter a username: ")
-        is_username_found = username_registered?(username)
-        while is_username_found
-            username = request_username("Username is already taken\nPlease enter a different username: ")
-            is_username_found = username_registered?(username)
+        username = request_input("Please enter a username: ")
+        is_username_validated = username_validation(users, username)
+        while !is_username_validated
+            puts "Invalid username\nPlease enter at least 6 characters and 1 letter".colorize(:red)
+            username = request_input("Please enter a different username: ")
+            is_username_validated = username_validation(users, username)
         end
-        password = request_password("Please enter a password: ")
+        password = request_input("Please enter a password: ")
+        is_password_validated = password_validation(password)
+        while !is_password_validated
+            puts "Invalid password\nPlease enter at least 6 characters".colorize(:red)
+            password = request_input("Please enter a different password: ")
+            is_password_validated = password_validation(password)
+        end
         puts "Successful sign-up".colorize(:blue)
         append_to_user_csv(username, password)
         users = load_data("user")
