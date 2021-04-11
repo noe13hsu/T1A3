@@ -69,7 +69,8 @@ To find out the version number in terminal
 ruby app.rb -v
 ```
 Here is a brief summary....
-"This GBM Helper can help you imporve your build with features such as:"
+
+This GBM Helper can help players of Gundam Breaker Mobile imporve their build with features such as:"
 - View my current build:
         The parts a user is currently using will be displayed in a table and the value of each attribute will be summed up.
 - Start a new build:
