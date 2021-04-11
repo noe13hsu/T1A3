@@ -1,9 +1,14 @@
 require "csv"
-require "tty-prompt"
-require "tty-table"
-require "colorize"
-require "ruby_figlet"
-require "lolize"
+begin
+    require "tty-prompt"
+    require "tty-table"
+    require "colorize"
+    require "ruby_figlet"
+    require "lolize"
+rescue LoadError
+    puts "Please run bundle install in your terminal to install the required gems"
+    exit
+end
 
 require_relative "argv"
 require_relative "method"
@@ -29,9 +34,15 @@ while !is_signed_in and !has_quit
 # ---------------------------Sign-up---------------------------------------
     when "Sign up"
         username = request_input("Please enter a username: ")
+        is_username_registered = username_registered?(users, username)
+        while is_username_registered
+            puts "Registered username".colorize(:red)
+            username = request_input("Please enter a different username: ")
+            is_username_registered = username_registered?(users, username)
+        end
         is_username_validated = username_validation(users, username)
         while !is_username_validated
-            puts "Invalid username or registered username\nPlease enter minimum 6 characters with at least 1 letter".colorize(:red)
+            puts "Invalid username\nPlease enter minimum 6 characters with at least 1 letter".colorize(:red)
             username = request_input("Please enter a different username: ")
             is_username_validated = username_validation(users, username)
         end
@@ -46,7 +57,6 @@ while !is_signed_in and !has_quit
         append_to_user_csv(username, password)
         users = load_data("user")
         this_user = load_user_details(users, username)
-        reset_build(this_user)
         is_signed_in = true
 # ----------------------------Log in---------------------------------------
     when "Log in"

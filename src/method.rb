@@ -1,4 +1,4 @@
-def append_to_user_csv(username, password, head=nil, body=nil, arm=nil, leg=nil, back=nil, weapon_melee=nil, weapon_ranged=nil, shield=nil, pilot=nil)
+def append_to_user_csv(username, password, head="-", body="-", arm="-", leg="-", back="-", weapon_melee="-", weapon_ranged="-", shield="-", pilot="-")
     CSV.open("user.csv", "a") do |row|
         row << [username, password, head, body, arm, leg, back, weapon_melee, weapon_ranged, shield, pilot]
     end
@@ -43,8 +43,8 @@ end
 def username_validation(users, username)
     required_format = /\A\p{Alnum}*\p{L}\p{Alnum}*\z/
     required_length = 6
-    is_username_registered = username_registered?(users, username)
-    if username.chars.length >= required_length and username.match?(required_format) == true and is_username_registered == false
+    # is_username_registered = username_registered?(users, username)
+    if username.chars.length >= required_length and username.match?(required_format) == true #and is_username_registered == false
         return true
     else
         return false
