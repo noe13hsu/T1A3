@@ -51,10 +51,12 @@ gem install ruby_figlet --no-rdoc --no-ri
 **Inside your terminal to run GBM Helper**
 
 ```
+cd src
 ruby app.rb
 ```
 or
 ```
+cd src
 ./execute.sh
 ```
 Please note if you run GBM Helper with ./execute.sh in Windows, it is possible that the arrow keys won't work....
