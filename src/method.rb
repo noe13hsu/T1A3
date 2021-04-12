@@ -263,7 +263,7 @@ def search_parts(user_selection)
             user_selection[:part] = gets.chomp.downcase.split(/\s+/).each{ |word| word.capitalize! }.join(' ')
             CSV.foreach("./parts/#{user_selection[:category]}.csv", :quote_char => "|", headers: true, header_converters: :symbol) do |row|
                 headers ||= row.headers
-                if row[:name] == user_selection[:part] and row[:name] != "-"
+                if row[:name].include? user_selection[:part] and row[:name] != "-"
                     search_result.push(row)
                 end
             end

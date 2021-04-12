@@ -91,7 +91,7 @@ while is_signed_in
         user_selection[:category] = category_menu
         user_selection, search_result = search_parts(user_selection)
         begin
-            user_selection[:part] = sorted_parts_menu(user_selection[:category], search_result, 1)
+            user_selection[:part] = sorted_parts_menu(user_selection[:category], search_result, 5)
             display_parts_data_table(user_selection, this_user)
             to_update_build?(user_selection, this_user)
         rescue NoMethodError
